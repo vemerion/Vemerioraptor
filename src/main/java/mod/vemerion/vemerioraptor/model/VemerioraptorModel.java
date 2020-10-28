@@ -1,0 +1,126 @@
+package mod.vemerion.vemerioraptor.model;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+
+import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
+import net.minecraft.client.renderer.entity.model.EntityModel;
+import net.minecraft.client.renderer.model.ModelRenderer;
+
+/**
+ * Created using Tabula 8.0.0
+ */
+public class VemerioraptorModel extends EntityModel<VemerioraptorEntity> {
+    public ModelRenderer body;
+    public ModelRenderer leftLeg1;
+    public ModelRenderer neck1;
+    public ModelRenderer tail1;
+    public ModelRenderer leftArm1;
+    public ModelRenderer leftLeg2;
+    public ModelRenderer leftLeg3;
+    public ModelRenderer leftLeg4;
+    public ModelRenderer head1;
+    public ModelRenderer head2;
+    public ModelRenderer tail2;
+    public ModelRenderer tail3;
+    public ModelRenderer tail4;
+    public ModelRenderer leftArm2;
+    public ModelRenderer leftArm3;
+
+    public VemerioraptorModel() {
+        this.textureWidth = 128;
+        this.textureHeight = 128;
+        this.leftArm1 = new ModelRenderer(this, 64, 8);
+        this.leftArm1.setRotationPoint(4.0F, 1.0F, -11.0F);
+        this.leftArm1.setTextureOffset(51, 0).addBox(0.0F, 0.0F, -1.5F, 2.0F, 7.0F, 3.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftArm1, 0.46914448828868976F, 0.0F, 0.0F);
+        this.leftLeg4 = new ModelRenderer(this, 60, 0);
+        this.leftLeg4.setRotationPoint(0.0F, 4.5F, 0.0F);
+        this.leftLeg4.addBox(-2.0F, 0.0F, -6.0F, 4.0F, 2.0F, 6.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftLeg4, 0.3909537457888271F, 0.0F, 0.0F);
+        this.head2 = new ModelRenderer(this, 64, 0);
+        this.head2.setRotationPoint(0.0F, -3.0F, -7.0F);
+        this.head2.setTextureOffset(28, 0).addBox(-3.0F, -2.0F, -8.0F, 6.0F, 4.0F, 7.0F, 0.0F, 0.0F, 0.0F);
+        this.neck1 = new ModelRenderer(this, 64, 0);
+        this.neck1.setRotationPoint(0.0F, 0.0F, -10.0F);
+        this.neck1.setTextureOffset(4, 0).addBox(-3.0F, -3.0F, -12.0F, 6.0F, 6.0F, 12.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(neck1, -0.5026548112585615F, 0.0F, 0.0F);
+        this.body = new ModelRenderer(this, 0, 0);
+        this.body.setRotationPoint(0.0F, 3.8F, 0.0F);
+        this.body.addBox(-5.0F, -5.0F, -14.0F, 10.0F, 10.0F, 20.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(body, -0.23457224414434488F, 0.0F, 0.0F);
+        this.head1 = new ModelRenderer(this, 60, 18);
+        this.head1.setRotationPoint(0.0F, -1.0F, -9.0F);
+        this.head1.addBox(-4.0F, -6.0F, -8.0F, 8.0F, 6.0F, 8.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(head1, 0.9717993328367648F, 0.0F, 0.0F);
+        this.tail1 = new ModelRenderer(this, 64, 22);
+        this.tail1.setRotationPoint(0.0F, 1.0F, 4.0F);
+        this.tail1.setTextureOffset(18, 0).addBox(-4.0F, -4.0F, 0.0F, 8.0F, 8.0F, 10.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(tail1, 0.46914448828868976F, 0.0F, 0.0F);
+        this.leftLeg2 = new ModelRenderer(this, 40, 0);
+        this.leftLeg2.setRotationPoint(0.0F, 6.0F, 0.0F);
+        this.leftLeg2.addBox(-1.5F, 0.0F, -1.5F, 3.0F, 6.0F, 3.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftLeg2, 0.9382889765773795F, 0.0F, 0.0F);
+        this.tail4 = new ModelRenderer(this, 64, 0);
+        this.tail4.setRotationPoint(0.0F, 0.0F, 5.1F);
+        this.tail4.setTextureOffset(47, 0).addBox(-1.0F, -1.0F, 0.0F, 2.0F, 2.0F, 5.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(tail4, -0.19547687289441354F, 0.0F, 0.0F);
+        this.leftArm3 = new ModelRenderer(this, 60, 8);
+        this.leftArm3.setRotationPoint(1.0F, 5.7F, 0.0F);
+        this.leftArm3.addBox(-1.5F, 0.0F, -0.5F, 3.0F, 4.0F, 1.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftArm3, 0.46914448828868976F, 0.0F, 0.0F);
+        this.leftLeg3 = new ModelRenderer(this, 52, 0);
+        this.leftLeg3.setRotationPoint(0.0F, 5.0F, 0.0F);
+        this.leftLeg3.addBox(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftLeg3, -1.0555751236166873F, 0.0F, 0.0F);
+        this.tail2 = new ModelRenderer(this, 0, 30);
+        this.tail2.setRotationPoint(0.0F, 0.0F, 9.0F);
+        this.tail2.addBox(-3.0F, -3.0F, 0.0F, 6.0F, 6.0F, 8.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(tail2, 0.23457224414434488F, 0.0F, 0.0F);
+        this.leftLeg1 = new ModelRenderer(this, 0, 0);
+        this.leftLeg1.setRotationPoint(5.0F, 0.0F, 3.0F);
+        this.leftLeg1.addBox(-1.5F, 0.0F, -2.0F, 3.0F, 8.0F, 4.0F, 0.0F, 0.0F, 0.0F);
+        this.leftArm2 = new ModelRenderer(this, 12, 10);
+        this.leftArm2.setRotationPoint(0.0F, 6.0F, 0.0F);
+        this.leftArm2.addBox(0.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(leftArm2, -1.0946705281561322F, 0.0F, 0.0F);
+        this.tail3 = new ModelRenderer(this, 46, 8);
+        this.tail3.setRotationPoint(0.0F, 0.0F, 7.0F);
+        this.tail3.addBox(-2.0F, -2.0F, 0.0F, 4.0F, 4.0F, 6.0F, 0.0F, 0.0F, 0.0F);
+        this.setRotateAngle(tail3, 0.03909537541112055F, 0.0F, 0.0F);
+        this.body.addChild(this.leftArm1);
+        this.leftLeg3.addChild(this.leftLeg4);
+        this.head1.addChild(this.head2);
+        this.body.addChild(this.neck1);
+        this.neck1.addChild(this.head1);
+        this.body.addChild(this.tail1);
+        this.leftLeg1.addChild(this.leftLeg2);
+        this.tail3.addChild(this.tail4);
+        this.leftArm2.addChild(this.leftArm3);
+        this.leftLeg2.addChild(this.leftLeg3);
+        this.tail1.addChild(this.tail2);
+        this.body.addChild(this.leftLeg1);
+        this.leftArm1.addChild(this.leftArm2);
+        this.tail2.addChild(this.tail3);
+    }
+
+    @Override
+    public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn, float red, float green, float blue, float alpha) { 
+        ImmutableList.of(this.body).forEach((modelRenderer) -> { 
+            modelRenderer.render(matrixStackIn, bufferIn, packedLightIn, packedOverlayIn, red, green, blue, alpha);
+        });
+    }
+
+    @Override
+    public void setRotationAngles(VemerioraptorEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
+
+    /**
+     * This is a helper function from Tabula to set the rotation of model parts
+     */
+    public void setRotateAngle(ModelRenderer modelRenderer, float x, float y, float z) {
+        modelRenderer.rotateAngleX = x;
+        modelRenderer.rotateAngleY = y;
+        modelRenderer.rotateAngleZ = z;
+    }
+}
