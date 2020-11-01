@@ -17,7 +17,7 @@ public class ModEventSubscriber {
 	@SubscribeEvent
 	public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
 		EntityType<VemerioraptorEntity> vemerioraptorType = EntityType.Builder
-				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1, 1F)
+				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1.2f, 2f)
 				.build("vemerioraptor_entity");
 
 		event.getRegistry().register(setup(vemerioraptorType, "vemerioraptor_entity"));
