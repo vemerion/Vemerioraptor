@@ -1,6 +1,7 @@
 package mod.vemerion.vemerioraptor.entity;
 
 import java.lang.reflect.Field;
+import java.util.function.Consumer;
 
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.BoostHelper;
@@ -17,7 +18,9 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -28,8 +31,9 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.VARINT);
-	
-	private static final Field isRiderJumping = ObfuscationReflectionHelper.findField(LivingEntity.class, "field_70703_bu"); 
+
+	private static final Field isRiderJumping = ObfuscationReflectionHelper.findField(LivingEntity.class,
+			"field_70703_bu");
 
 	private BoostHelper boostHelper = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 
@@ -49,6 +53,37 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	}
 
 	@Override
+	public void tick() {
+		super.tick();
+
+		ifRider(rider -> {
+			if (rider.isSwingInProgress) {
+				if (!isSwingInProgress) {
+					swingArm(Hand.MAIN_HAND);
+				}
+
+				if (!world.isRemote) {
+					AxisAlignedBB attackBox = getBoundingBox().offset(Vector3d.fromPitchYaw(getPitchYaw()).scale(2));
+					for (Entity e : world.getEntitiesInAABBexcluding(this, attackBox, e -> e != rider)) {
+						e.attackEntityFrom(DamageSource.causeMobDamage(this), 4);
+					}
+				}
+			}
+		});
+		
+		updateArmSwingProgress();
+	}
+
+	private boolean ifRider(Consumer<PlayerEntity> consumer) {
+		if (isBeingRidden() && canBeSteered() && getControllingPassenger() instanceof PlayerEntity) {
+			PlayerEntity rider = (PlayerEntity) getControllingPassenger();
+			consumer.accept(rider);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public void travel(Vector3d travelVector) {
 		ride(this, boostHelper, Vector3d.ZERO);
 	}
@@ -62,7 +97,7 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	public boolean boost() {
 		return boostHelper.boost(getRNG());
 	}
-	
+
 	@Override
 	protected float getJumpUpwardsMotion() {
 		return super.getJumpUpwardsMotion() * 1.3f;
@@ -70,8 +105,7 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 
 	@Override
 	public void travelTowards(Vector3d travelVec) {
-		if (isBeingRidden() && canBeSteered() && getControllingPassenger() instanceof PlayerEntity) {
-			PlayerEntity rider = (PlayerEntity) getControllingPassenger();
+		if (!ifRider(rider -> {
 			float forward = rider.moveForward;
 			float strafe = rider.moveStrafing * 0.5f;
 			try {
@@ -84,7 +118,7 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 			if (forward < 0)
 				forward *= 0.25f;
 			super.travel(new Vector3d(strafe, 0, forward));
-		} else {
+		})) {
 			super.travel(travelVec);
 		}
 	}
