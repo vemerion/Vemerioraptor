@@ -1,10 +1,13 @@
 package mod.vemerion.vemerioraptor.entity;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.BoostHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRideable;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
@@ -18,12 +21,15 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.VARINT);
+	
+	private static final Field isRiderJumping = ObfuscationReflectionHelper.findField(LivingEntity.class, "field_70703_bu"); 
 
 	private BoostHelper boostHelper = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 
@@ -56,6 +62,11 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	public boolean boost() {
 		return boostHelper.boost(getRNG());
 	}
+	
+	@Override
+	protected float getJumpUpwardsMotion() {
+		return super.getJumpUpwardsMotion() * 1.3f;
+	}
 
 	@Override
 	public void travelTowards(Vector3d travelVec) {
@@ -63,6 +74,13 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 			PlayerEntity rider = (PlayerEntity) getControllingPassenger();
 			float forward = rider.moveForward;
 			float strafe = rider.moveStrafing * 0.5f;
+			try {
+				if (isRiderJumping.getBoolean(rider) && onGround) {
+					jump();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			if (forward < 0)
 				forward *= 0.25f;
 			super.travel(new Vector3d(strafe, 0, forward));
