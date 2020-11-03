@@ -183,7 +183,6 @@ public class VemerioraptorModel extends EntityModel<VemerioraptorEntity> {
 			tail.rotateAngleX = MathHelper.cos(ageInTicks * 0.05f + limbSwing * 0.18f)
 					* (float) Math.toRadians(5 + limbSwingAmount * 5);
 		}
-
 	}
 
 	@Override
