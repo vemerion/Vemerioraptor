@@ -3,8 +3,8 @@ package mod.vemerion.vemerioraptor.entity;
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 
-import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.BoostHelper;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRideable;
@@ -12,7 +12,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.passive.AnimalEntity;
+import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -23,10 +23,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class VemerioraptorEntity extends AnimalEntity implements IRideable {
+public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(VemerioraptorEntity.class,
@@ -50,6 +49,11 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 		super.registerData();
 		this.dataManager.register(SADDLED, true);
 		this.dataManager.register(BOOST_TIME, 0);
+	}
+
+	@Override
+	protected void registerGoals() {
+		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
 	}
 
 	@Override
@@ -85,7 +89,7 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 
 	@Override
 	public void travel(Vector3d travelVector) {
-		ride(this, boostHelper, Vector3d.ZERO);
+		ride(this, boostHelper, travelVector);
 	}
 
 	@Override
@@ -126,11 +130,6 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	@Override
 	public float getMountedSpeed() {
 		return (float) getAttributeValue(Attributes.MOVEMENT_SPEED);
-	}
-
-	@Override
-	public AgeableEntity func_241840_a(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) { // Breed
-		return null;
 	}
 
 	@Override
