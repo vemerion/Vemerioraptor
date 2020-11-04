@@ -34,6 +34,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
@@ -44,6 +45,8 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.VARINT);
+	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(VemerioraptorEntity.class,
+			DataSerializers.BOOLEAN);
 
 	private static final Field isRiderJumping = ObfuscationReflectionHelper.findField(LivingEntity.class,
 			"field_70703_bu");
@@ -64,6 +67,15 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		super.registerData();
 		this.dataManager.register(SADDLED, true);
 		this.dataManager.register(BOOST_TIME, 0);
+		this.dataManager.register(EATING, false);
+	}
+	
+	public boolean isEating() {
+		return dataManager.get(EATING);
+	}
+	
+	public void setEating(boolean eating) {
+		dataManager.set(EATING, eating);
 	}
 
 	@Override
@@ -182,6 +194,8 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 				Items.RABBIT);
 
 		private VemerioraptorEntity raptor;
+		private ItemEntity target;
+		private int eatingTimer;
 
 		public FindMeatGoal(VemerioraptorEntity raptor) {
 			this.raptor = raptor;
@@ -190,22 +204,44 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 
 		@Override
 		public boolean shouldExecute() {
-			return !getNearbyMeat().isEmpty();
+			return !getNearbyMeat().isEmpty() && !raptor.isBeingRidden();
 		}
 
 		@Override
 		public void startExecuting() {
+			raptor.setEating(false);
 			List<ItemEntity> meats = getNearbyMeat();
 			if (!meats.isEmpty()) {
 				raptor.getNavigator().tryMoveToEntityLiving(meats.get(0), (double) 1.2F);
 			}
+		}
+		
+		@Override
+		public void resetTask() {
+			raptor.setEating(false);
 		}
 
 		@Override
 		public void tick() {
 			List<ItemEntity> meats = getNearbyMeat();
 			if (!meats.isEmpty()) {
-				raptor.getNavigator().tryMoveToEntityLiving(meats.get(0), (double) 1.2F);
+				ItemEntity meat = meats.get(0);
+				raptor.getNavigator().tryMoveToEntityLiving(meat, (double) 1.2F);
+				if (meat.getDistanceSq(raptor) < 4) {
+					if (meat != target) {
+						eatingTimer = 40;
+					} else {
+						if (eatingTimer-- < 0) {
+							raptor.setEating(false);
+							target.remove();
+						} else {
+							raptor.setEating(true);
+							if (eatingTimer % 4 == 0)
+								raptor.playSound(SoundEvents.ENTITY_GENERIC_EAT, 1, raptor.getSoundPitch());
+						}
+					}
+					target = meat;
+				}
 			}
 		}
 
