@@ -29,15 +29,18 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class VemerioraptorEntity extends CreatureEntity implements IRideable {
@@ -47,11 +50,16 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 			DataSerializers.VARINT);
 	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.BOOLEAN);
+	private static final DataParameter<Boolean> FRIENDLY = EntityDataManager.createKey(VemerioraptorEntity.class,
+			DataSerializers.BOOLEAN);
+
+	private static final int FRIENDLY_DURATION = 20 * 60;
 
 	private static final Field isRiderJumping = ObfuscationReflectionHelper.findField(LivingEntity.class,
 			"field_70703_bu");
 
 	private BoostHelper boostHelper = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
+	private int friendlyTimer;
 
 	public VemerioraptorEntity(EntityType<? extends VemerioraptorEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -68,14 +76,48 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		this.dataManager.register(SADDLED, true);
 		this.dataManager.register(BOOST_TIME, 0);
 		this.dataManager.register(EATING, false);
+		this.dataManager.register(FRIENDLY, false);
 	}
-	
+
 	public boolean isEating() {
 		return dataManager.get(EATING);
 	}
-	
-	public void setEating(boolean eating) {
+
+	private void setEating(boolean eating) {
 		dataManager.set(EATING, eating);
+	}
+
+	private boolean isFriendly() {
+		return dataManager.get(FRIENDLY);
+	}
+
+	private void makeHappy() {
+		dataManager.set(FRIENDLY, true);
+		friendlyTimer = FRIENDLY_DURATION;
+		for (int i = 0; i < 10; i++) {
+			((ServerWorld) world).spawnParticle(ParticleTypes.HEART, this.getPosXRandom(1.0D),
+					this.getPosYRandom() + 0.5D, this.getPosZRandom(1.0D), 1, 0, 0, 0, 1);
+		}
+		setAttackTarget(null);
+		setRevengeTarget(null);
+	}
+
+	private void setFriendly(Boolean friendly) {
+		dataManager.set(FRIENDLY, friendly);
+	}
+
+	@Override
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+		compound.putInt("friendlyTimer", friendlyTimer);
+	}
+
+	@Override
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
+		friendlyTimer = compound.getInt("friendlyTimer");
+		if (friendlyTimer > 0)
+			setFriendly(true);
 	}
 
 	@Override
@@ -86,6 +128,8 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
 		goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(8, new LookRandomlyGoal(this));
+		targetSelector.addGoal(3,
+				new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, e -> !isFriendly()));
 		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, null));
 
 	}
@@ -108,6 +152,13 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 				}
 			}
 		});
+
+		if (!world.isRemote) {
+			if (friendlyTimer-- < 0) {
+				setFriendly(false);
+				getPassengers().forEach(e -> e.dismount());
+			}
+		}
 
 		updateArmSwingProgress();
 	}
@@ -173,13 +224,13 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 
 	@Override
 	public boolean canBeSteered() {
-		return true;
+		return isFriendly();
 	}
 
 	// Interact with entity
 	@Override
 	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-		if (!isBeingRidden() && !player.isSecondaryUseActive()) {
+		if (!isBeingRidden() && !player.isSecondaryUseActive() && isFriendly()) {
 			if (!this.world.isRemote) {
 				player.startRiding(this);
 			}
@@ -215,7 +266,7 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 				raptor.getNavigator().tryMoveToEntityLiving(meats.get(0), (double) 1.2F);
 			}
 		}
-		
+
 		@Override
 		public void resetTask() {
 			raptor.setEating(false);
@@ -234,6 +285,7 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 						if (eatingTimer-- < 0) {
 							raptor.setEating(false);
 							target.remove();
+							raptor.makeHappy();
 						} else {
 							raptor.setEating(true);
 							if (eatingTimer % 4 == 0)
