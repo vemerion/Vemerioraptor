@@ -61,6 +61,7 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	private BoostHelper boostHelper = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 	private int friendlyTimer;
 
+	// TODO: Add raptor spawn egg
 	public VemerioraptorEntity(EntityType<? extends VemerioraptorEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
@@ -132,6 +133,11 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 				new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, e -> !isFriendly()));
 		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, null));
 
+	}
+	
+	@Override
+	public boolean canDespawn(double distanceToClosestPlayer) {
+		return false;
 	}
 
 	@Override
