@@ -61,7 +61,6 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	private BoostHelper boostHelper = new BoostHelper(this.dataManager, BOOST_TIME, SADDLED);
 	private int friendlyTimer;
 
-	// TODO: Add raptor spawn egg
 	public VemerioraptorEntity(EntityType<? extends VemerioraptorEntity> type, World worldIn) {
 		super(type, worldIn);
 	}
