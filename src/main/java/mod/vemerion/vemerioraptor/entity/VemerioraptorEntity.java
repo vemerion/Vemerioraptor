@@ -8,6 +8,7 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableSet;
 
+import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.BoostHelper;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
@@ -35,7 +36,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
@@ -65,6 +68,7 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		super(type, worldIn);
 	}
 
+	// TODO: Balance attributes
 	public static AttributeModifierMap.MutableAttribute attributes() {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
@@ -133,10 +137,35 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, null));
 
 	}
-	
+
 	@Override
 	public boolean canDespawn(double distanceToClosestPlayer) {
 		return false;
+	}
+
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return Main.RAPTOR_AMBIENT_SOUND;
+	}
+	
+	@Override
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return Main.RAPTOR_HURT_SOUND;
+	}
+	
+	@Override
+	protected SoundEvent getDeathSound() {
+		return Main.RAPTOR_DEATH_SOUND;
+	}
+	
+	@Override
+	protected float getSoundVolume() {
+		return super.getSoundVolume() * 0.8f;
+	}
+	
+	@Override
+	public int getTalkInterval() {
+		return 120;
 	}
 
 	@Override

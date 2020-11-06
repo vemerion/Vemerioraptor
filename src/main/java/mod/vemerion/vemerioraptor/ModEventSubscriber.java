@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -35,6 +36,17 @@ public class ModEventSubscriber {
 		Item vemerioraptorSpawnEgg = new SpawnEggItem(vemerioraptorType, new Color(137, 115, 76).getRGB(),
 				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.MISC));
 		event.getRegistry().register(setup(vemerioraptorSpawnEgg, "vemerioraptor_spawn_egg"));
+	}
+	
+	@SubscribeEvent
+	public static void onRegisterSound(RegistryEvent.Register<SoundEvent> event) {
+		SoundEvent raptor_ambient_sound = new SoundEvent(new ResourceLocation(Main.MODID, "raptor_ambient_sound"));
+		event.getRegistry().register(setup(raptor_ambient_sound, "raptor_ambient_sound"));
+		SoundEvent raptor_death_sound = new SoundEvent(new ResourceLocation(Main.MODID, "raptor_death_sound"));
+		event.getRegistry().register(setup(raptor_death_sound, "raptor_death_sound"));
+		SoundEvent raptor_hurt_sound = new SoundEvent(new ResourceLocation(Main.MODID, "raptor_hurt_sound"));
+		event.getRegistry().register(setup(raptor_hurt_sound, "raptor_hurt_sound"));
+
 	}
 
 	@SubscribeEvent

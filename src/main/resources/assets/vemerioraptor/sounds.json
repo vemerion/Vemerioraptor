@@ -1,0 +1,29 @@
+{
+  "raptor_ambient_sound": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "vemerioraptor:raptor_ambient_sound",
+        "stream": false
+      }
+    ]
+  },
+  "raptor_death_sound": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "vemerioraptor:raptor_death_sound",
+        "stream": false
+      }
+    ]
+  },
+  "raptor_hurt_sound": {
+    "category": "hostile",
+    "sounds": [
+      {
+        "name": "vemerioraptor:raptor_hurt_sound",
+        "stream": false
+      }
+    ]
+  }
+}
