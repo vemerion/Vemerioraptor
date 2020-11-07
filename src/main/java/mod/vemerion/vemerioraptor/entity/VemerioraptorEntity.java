@@ -68,11 +68,10 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		super(type, worldIn);
 	}
 
-	// TODO: Balance attributes
 	public static AttributeModifierMap.MutableAttribute attributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 10.0D)
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 25.0D)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.25D)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 4.0D);
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 3.0D);
 	}
 
 	protected void registerData() {
@@ -128,7 +127,12 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new SwimGoal(this));
 		goalSelector.addGoal(1, new FindMeatGoal(this));
-		goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true));
+		goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true) {
+			@Override
+			public boolean shouldExecute() {
+				return super.shouldExecute() && !isFriendly();
+			}
+		});
 		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
 		goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(8, new LookRandomlyGoal(this));
@@ -147,22 +151,22 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	protected SoundEvent getAmbientSound() {
 		return Main.RAPTOR_AMBIENT_SOUND;
 	}
-	
+
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
 		return Main.RAPTOR_HURT_SOUND;
 	}
-	
+
 	@Override
 	protected SoundEvent getDeathSound() {
 		return Main.RAPTOR_DEATH_SOUND;
 	}
-	
+
 	@Override
 	protected float getSoundVolume() {
 		return super.getSoundVolume() * 0.8f;
 	}
-	
+
 	@Override
 	public int getTalkInterval() {
 		return 120;
