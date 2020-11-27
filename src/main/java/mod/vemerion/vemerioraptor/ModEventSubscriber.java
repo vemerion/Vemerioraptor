@@ -2,6 +2,7 @@ package mod.vemerion.vemerioraptor;
 
 import java.awt.Color;
 
+import mod.vemerion.vemerioraptor.entity.VemerioraptorEggEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
@@ -25,6 +26,11 @@ public class ModEventSubscriber {
 	@SubscribeEvent
 	public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
 		event.getRegistry().register(setup(vemerioraptorType, "vemerioraptor_entity"));
+
+		EntityType<VemerioraptorEggEntity> vemerioraptorEggType = EntityType.Builder
+				.<VemerioraptorEggEntity>create(VemerioraptorEggEntity::new, EntityClassification.CREATURE).size(1, 1)
+				.build("vemerioraptor_egg_entity");
+		event.getRegistry().register(setup(vemerioraptorEggType, "vemerioraptor_egg_entity"));
 	}
 
 	@SubscribeEvent
@@ -37,7 +43,7 @@ public class ModEventSubscriber {
 				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.MISC));
 		event.getRegistry().register(setup(vemerioraptorSpawnEgg, "vemerioraptor_spawn_egg"));
 	}
-	
+
 	@SubscribeEvent
 	public static void onRegisterSound(RegistryEvent.Register<SoundEvent> event) {
 		SoundEvent raptor_ambient_sound = new SoundEvent(new ResourceLocation(Main.MODID, "raptor_ambient_sound"));
@@ -51,8 +57,12 @@ public class ModEventSubscriber {
 
 	@SubscribeEvent
 	public static void registerAttributes(ParallelDispatchEvent event) {
-		event.enqueueWork(() -> GlobalEntityTypeAttributes.put(Main.VEMERIORAPTOR_ENTITY,
-				VemerioraptorEntity.attributes().create()));
+		event.enqueueWork(() -> setEntityAttributes());
+	}
+
+	private static void setEntityAttributes() {
+		GlobalEntityTypeAttributes.put(Main.VEMERIORAPTOR_ENTITY, VemerioraptorEntity.attributes().create());
+		GlobalEntityTypeAttributes.put(Main.VEMERIORAPTOR_EGG_ENTITY, VemerioraptorEggEntity.attributes().create());
 	}
 
 	public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final String name) {

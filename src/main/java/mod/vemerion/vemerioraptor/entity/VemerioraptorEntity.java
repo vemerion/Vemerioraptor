@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 import com.google.common.collect.ImmutableSet;
 
 import mod.vemerion.vemerioraptor.Main;
+import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.BoostHelper;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IRideable;
@@ -18,6 +18,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
+import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
@@ -29,6 +30,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
@@ -46,7 +48,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class VemerioraptorEntity extends CreatureEntity implements IRideable {
+public class VemerioraptorEntity extends AnimalEntity implements IRideable {
+	private static final Set<Item> MEATS = ImmutableSet.of(Items.PORKCHOP, Items.BEEF, Items.MUTTON, Items.CHICKEN,
+			Items.RABBIT);
+	
 	private static final DataParameter<Boolean> SADDLED = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.BOOLEAN);
 	private static final DataParameter<Integer> BOOST_TIME = EntityDataManager.createKey(VemerioraptorEntity.class,
@@ -66,6 +71,10 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 
 	public VemerioraptorEntity(EntityType<? extends VemerioraptorEntity> type, World worldIn) {
 		super(type, worldIn);
+	}
+
+	public VemerioraptorEntity(World worldIn) {
+		this(Main.VEMERIORAPTOR_ENTITY, worldIn);
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
@@ -124,27 +133,33 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	}
 
 	@Override
+	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
+		return new VemerioraptorEggEntity(world);
+	}
+
+	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new SwimGoal(this));
 		goalSelector.addGoal(1, new FindMeatGoal(this));
-		goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.4, true) {
+		goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.4, true) {
 			@Override
 			public boolean shouldExecute() {
 				return super.shouldExecute() && !isFriendly();
 			}
 		});
+		goalSelector.addGoal(3, new BreedGoal(this, 1));
 		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
 		goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(8, new LookRandomlyGoal(this));
 		targetSelector.addGoal(3,
 				new NearestAttackableTargetGoal<>(this, PlayerEntity.class, 10, true, false, e -> !isFriendly()));
-		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, null));
+		targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, AnimalEntity.class, 10, true, false, e -> !(e instanceof VemerioraptorEntity)));
 
 	}
-
+	
 	@Override
-	public boolean canDespawn(double distanceToClosestPlayer) {
-		return false;
+	public boolean isBreedingItem(ItemStack stack) {
+		return MEATS.contains(stack.getItem());
 	}
 
 	@Override
@@ -165,11 +180,6 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	@Override
 	protected float getSoundVolume() {
 		return super.getSoundVolume() * 0.8f;
-	}
-
-	@Override
-	public int getTalkInterval() {
-		return 120;
 	}
 
 	@Override
@@ -217,7 +227,12 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 
 	@Override
 	public double getMountedYOffset() {
-		return super.getMountedYOffset() * 0.9;
+		return super.getMountedYOffset() * 0.75;
+	}
+	
+	@Override
+	public double getYOffset() {
+		return 0;
 	}
 
 	@Override
@@ -277,10 +292,14 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		}
 		return super.func_230254_b_(player, hand);
 	}
+	
+	@Override
+	public boolean canFallInLove() {
+		return super.canFallInLove() && isFriendly();
+	}
 
 	private static class FindMeatGoal extends Goal {
-		private static final Set<Item> MEATS = ImmutableSet.of(Items.PORKCHOP, Items.BEEF, Items.MUTTON, Items.CHICKEN,
-				Items.RABBIT);
+
 
 		private VemerioraptorEntity raptor;
 		private ItemEntity target;
@@ -342,5 +361,4 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 		}
 
 	}
-
 }
