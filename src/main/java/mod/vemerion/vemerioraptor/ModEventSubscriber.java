@@ -39,6 +39,9 @@ public class ModEventSubscriber {
 				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1.2f, 2f)
 				.build("vemerioraptor_entity");
 
+		event.getRegistry()
+				.register(setup(new Item(new Item.Properties().group(ItemGroup.SEARCH)), "vemerioraptor_claw_item"));
+
 		Item vemerioraptorSpawnEgg = new SpawnEggItem(vemerioraptorType, new Color(137, 115, 76).getRGB(),
 				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.MISC));
 		event.getRegistry().register(setup(vemerioraptorSpawnEgg, "vemerioraptor_spawn_egg"));
