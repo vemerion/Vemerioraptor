@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEggEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
+import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
@@ -41,6 +42,7 @@ public class ModEventSubscriber {
 
 		event.getRegistry()
 				.register(setup(new Item(new Item.Properties().group(ItemGroup.SEARCH)), "vemerioraptor_claw_item"));
+		event.getRegistry().register(setup(new VemerioraptorClawWeaponItem(), "vemerioraptor_claw_weapon_item"));
 
 		Item vemerioraptorSpawnEgg = new SpawnEggItem(vemerioraptorType, new Color(137, 115, 76).getRGB(),
 				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.MISC));

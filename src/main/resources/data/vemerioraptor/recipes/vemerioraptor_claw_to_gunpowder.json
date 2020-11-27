@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vemerioraptor:vemerioraptor_claw_item"
+    }
+  ],
+  "result": {
+    "item": "minecraft:gunpowder"
+  }
+}          
