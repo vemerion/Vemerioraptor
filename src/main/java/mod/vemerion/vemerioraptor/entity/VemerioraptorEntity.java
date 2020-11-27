@@ -127,7 +127,7 @@ public class VemerioraptorEntity extends CreatureEntity implements IRideable {
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new SwimGoal(this));
 		goalSelector.addGoal(1, new FindMeatGoal(this));
-		goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.0D, true) {
+		goalSelector.addGoal(5, new MeleeAttackGoal(this, 1.4, true) {
 			@Override
 			public boolean shouldExecute() {
 				return super.shouldExecute() && !isFriendly();
