@@ -47,6 +47,7 @@ public class VemerioraptorEggEntity extends AgeableEntity {
 				Vector3d pos = getPositionVec().add(rand.nextDouble() - 0.5, rand.nextDouble() - 0.5,
 						rand.nextDouble() - 0.5);
 				raptor.setLocationAndAngles(pos.x, pos.y, pos.z, rand.nextInt(360), 0);
+				raptor.setChild(true);
 				world.addEntity(raptor);
 			}
 			remove();

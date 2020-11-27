@@ -283,7 +283,7 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 	// Interact with entity
 	@Override
 	public ActionResultType func_230254_b_(PlayerEntity player, Hand hand) {
-		if (!isBeingRidden() && !player.isSecondaryUseActive() && isFriendly()) {
+		if (!isBeingRidden() && !player.isSecondaryUseActive() && isFriendly() && !isChild()) {
 			if (!this.world.isRemote) {
 				player.startRiding(this);
 			}
