@@ -4,15 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import mod.vemerion.vemerioraptor.Main;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
 /**
  * Created using Tabula 8.0.0
  */
-public class VemerioraptorModel extends EntityModel<VemerioraptorEntity> {
+public class VemerioraptorModel extends DinosaurModel<VemerioraptorEntity> {
+	
+	private static final ResourceLocation TEXTURES = new ResourceLocation(Main.MODID, "textures/entity/vemerioraptor.png");
+	
 	public ModelRenderer body;
 	public ModelRenderer leftLeg1;
 	public ModelRenderer neck1;
@@ -225,5 +229,10 @@ public class VemerioraptorModel extends EntityModel<VemerioraptorEntity> {
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
+	}
+
+	@Override
+	public ResourceLocation getTexture() {
+		return TEXTURES;
 	}
 }

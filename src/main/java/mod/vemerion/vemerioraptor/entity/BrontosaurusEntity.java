@@ -6,13 +6,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
-public class BrontosaurusEntity extends AnimalEntity {
+public class BrontosaurusEntity extends DinosaurEntity {
 
 	public BrontosaurusEntity(EntityType<? extends BrontosaurusEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -42,12 +41,5 @@ public class BrontosaurusEntity extends AnimalEntity {
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
 		return ItemTags.LEAVES.contains(stack.getItem());
-	}
-
-
-	@Override
-	public void tick() {
-		super.tick();
-		updateArmSwingProgress();
 	}
 }

@@ -48,7 +48,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
-public class VemerioraptorEntity extends AnimalEntity implements IRideable {
+public class VemerioraptorEntity extends DinosaurEntity implements IRideable {
 	private static final Set<Item> MEATS = ImmutableSet.of(Items.PORKCHOP, Items.BEEF, Items.MUTTON, Items.CHICKEN,
 			Items.RABBIT);
 	
@@ -207,8 +207,6 @@ public class VemerioraptorEntity extends AnimalEntity implements IRideable {
 				getPassengers().forEach(e -> e.dismount());
 			}
 		}
-
-		updateArmSwingProgress();
 	}
 
 	private boolean ifRider(Consumer<PlayerEntity> consumer) {

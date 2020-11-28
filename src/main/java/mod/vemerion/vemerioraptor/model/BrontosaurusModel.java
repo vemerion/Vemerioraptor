@@ -4,14 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
+import mod.vemerion.vemerioraptor.Main;
 import mod.vemerion.vemerioraptor.entity.BrontosaurusEntity;
-import net.minecraft.client.renderer.entity.model.EntityModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created using Tabula 8.0.0
  */
-public class BrontosaurusModel extends EntityModel<BrontosaurusEntity> {
+public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
+	
+	private static final ResourceLocation TEXTURES = new ResourceLocation(Main.MODID, "textures/entity/brontosaurus.png");
+
+	
     public ModelRenderer body;
     public ModelRenderer tail1;
     public ModelRenderer backLeftLeg;
@@ -109,4 +114,9 @@ public class BrontosaurusModel extends EntityModel<BrontosaurusEntity> {
         modelRenderer.rotateAngleY = y;
         modelRenderer.rotateAngleZ = z;
     }
+
+	@Override
+	public ResourceLocation getTexture() {
+		return TEXTURES;
+	}
 }
