@@ -43,7 +43,7 @@ public class ModEventSubscriber {
 				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1.2f, 2f)
 				.build("vemerioraptor_entity");
 		brontosaurusType = EntityType.Builder
-				.<BrontosaurusEntity>create(BrontosaurusEntity::new, EntityClassification.CREATURE).size(3, 3)
+				.<BrontosaurusEntity>create(BrontosaurusEntity::new, EntityClassification.CREATURE).size(2, 2)
 				.build("brontosaurus_entity");
 
 		event.getRegistry()

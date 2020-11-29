@@ -23,8 +23,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.Hand;
 import net.minecraft.util.RangedInteger;
 import net.minecraft.util.TickRangeConverter;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -34,6 +36,9 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	private int angryTime;
 	private UUID angerTarget;
+	private boolean isBrontosaurusAttacking;
+	private float brontosaurusAttackingProgress;
+	private float prevBrontosaurusAttackingProgress;
 
 	public BrontosaurusEntity(EntityType<? extends BrontosaurusEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -45,7 +50,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 50.0D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.15D)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
 	}
 
@@ -56,6 +61,37 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 		if (!world.isRemote) {
 			this.func_241359_a_((ServerWorld) world, true); // IAngerable tick
 		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
+
+		if (isBrontosaurusAttacking) {
+			prevBrontosaurusAttackingProgress = brontosaurusAttackingProgress;
+			brontosaurusAttackingProgress += 0.05;
+			if (brontosaurusAttackingProgress > 1) {
+				isBrontosaurusAttacking = false;
+				brontosaurusAttackingProgress = 0;
+				prevBrontosaurusAttackingProgress = 0;
+			}
+		}
+	}
+
+	public float getBrontosaurusAttackingProgress(float partialTicks) {
+		return MathHelper.lerp(partialTicks, prevBrontosaurusAttackingProgress, brontosaurusAttackingProgress);
+	}
+	
+	public boolean isBrontosaurusAttacking() {
+		return isBrontosaurusAttacking;
+	}
+
+	@Override
+	public void swing(Hand handIn, boolean updateSelf) {
+		super.swing(handIn, updateSelf);
+		isBrontosaurusAttacking = isSwingInProgress;
+		brontosaurusAttackingProgress = swingProgress;
+		prevBrontosaurusAttackingProgress = swingProgress;
 	}
 
 	@Override
