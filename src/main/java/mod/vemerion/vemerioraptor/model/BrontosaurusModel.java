@@ -36,17 +36,17 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
         this.textureWidth = 128;
         this.textureHeight = 128;
         this.backLeftLeg = new ModelRenderer(this, 0, 52);
-        this.backLeftLeg.setRotationPoint(4.0F, -4.0F, 0.0F);
+        this.backLeftLeg.setRotationPoint(6.0F, -4.0F, 0.0F);
         this.backLeftLeg.addBox(0.0F, 0.0F, -3.5F, 7.0F, 28.0F, 7.0F, 0.0F, 0.0F, 0.0F);
         this.frontLeftLeg = new ModelRenderer(this, 0, 52);
-        this.frontLeftLeg.setRotationPoint(4.0F, -4.0F, -20.0F);
+        this.frontLeftLeg.setRotationPoint(6.0F, -4.0F, -20.0F);
         this.frontLeftLeg.addBox(0.0F, 0.0F, -3.5F, 7.0F, 28.0F, 7.0F, 0.0F, 0.0F, 0.0F);
         this.neck3 = new ModelRenderer(this, 0, 87);
         this.neck3.setRotationPoint(0.0F, 0.0F, -16.0F);
         this.neck3.addBox(-3.0F, -3.0F, -14.0F, 6.0F, 6.0F, 14.0F, 0.0F, 0.0F, 0.0F);
         this.setRotateAngle(neck3, -0.23457224414434488F, 0.0F, 0.0F);
         this.neck1 = new ModelRenderer(this, 28, 52);
-        this.neck1.setRotationPoint(0.0F, -4.0F, -24.0F);
+        this.neck1.setRotationPoint(0.0F, -1.0F, -24.0F);
         this.neck1.addBox(-5.0F, -5.0F, -18.0F, 10.0F, 10.0F, 18.0F, 0.0F, 0.0F, 0.0F);
         this.setRotateAngle(neck1, -0.46914448828868976F, 0.0F, 0.0F);
         this.tail2 = new ModelRenderer(this, 70, 68);
@@ -58,11 +58,11 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
         this.head.addBox(-4.0F, -1.0F, -8.0F, 8.0F, 14.0F, 8.0F, 0.0F, 0.0F, 0.0F);
         this.backRightLeg = new ModelRenderer(this, 0, 52);
         this.backRightLeg.mirror = true;
-        this.backRightLeg.setRotationPoint(-7.0F, -4.0F, 0.0F);
+        this.backRightLeg.setRotationPoint(-5.0F, -4.0F, 0.0F);
         this.backRightLeg.addBox(-8.0F, 0.0F, -3.5F, 7.0F, 28.0F, 7.0F, 0.0F, 0.0F, 0.0F);
         this.body = new ModelRenderer(this, 0, 0);
         this.body.setRotationPoint(0.0F, 0.0F, 10.0F);
-        this.body.addBox(-12.0F, -12.0F, -26.0F, 20.0F, 20.0F, 32.0F, 0.0F, 0.0F, 0.0F);
+        this.body.addBox(-10.0F, -10.0F, -26.0F, 20.0F, 20.0F, 32.0F, 0.0F, 0.0F, 0.0F);
         this.tail4 = new ModelRenderer(this, 98, 52);
         this.tail4.setRotationPoint(0.0F, 0.0F, 9.0F);
         this.tail4.addBox(-1.5F, -1.5F, 0.0F, 3.0F, 3.0F, 10.0F, 0.0F, 0.0F, 0.0F);
@@ -73,7 +73,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
         this.setRotateAngle(tail3, 0.1563815016444822F, 0.0F, 0.0F);
         this.frontRightLeg = new ModelRenderer(this, 0, 52);
         this.frontRightLeg.mirror = true;
-        this.frontRightLeg.setRotationPoint(-7.0F, -4.0F, -20.0F);
+        this.frontRightLeg.setRotationPoint(-5.0F, -4.0F, -20.0F);
         this.frontRightLeg.addBox(-8.0F, 0.0F, -3.5F, 7.0F, 28.0F, 7.0F, 0.0F, 0.0F, 0.0F);
         this.tail1 = new ModelRenderer(this, 24, 98);
         this.tail1.setRotationPoint(0.0F, -2.0F, 4.0F);
@@ -95,7 +95,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
         this.body.addChild(this.frontRightLeg);
         this.body.addChild(this.tail1);
         this.neck1.addChild(this.neck2);
-    }  
+    } 
 
 	@Override
 	public void render(MatrixStack matrixStackIn, IVertexBuilder bufferIn, int packedLightIn, int packedOverlayIn,

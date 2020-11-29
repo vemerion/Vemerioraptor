@@ -4,6 +4,7 @@ import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.ResetAngerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
@@ -22,11 +24,15 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
 import net.minecraft.util.RangedInteger;
 import net.minecraft.util.TickRangeConverter;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
@@ -81,7 +87,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	public float getBrontosaurusAttackingProgress(float partialTicks) {
 		return MathHelper.lerp(partialTicks, prevBrontosaurusAttackingProgress, brontosaurusAttackingProgress);
 	}
-	
+
 	public boolean isBrontosaurusAttacking() {
 		return isBrontosaurusAttacking;
 	}
@@ -109,6 +115,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 			}
 		});
 		goalSelector.addGoal(3, new BreedGoal(this, 1));
+		goalSelector.addGoal(4, new EatLeavesGoal(this, 1, 12, 5));
 		goalSelector.addGoal(6, new WaterAvoidingRandomWalkingGoal(this, 0.7D));
 		goalSelector.addGoal(7, new LookAtGoal(this, PlayerEntity.class, 6.0F));
 		goalSelector.addGoal(8, new LookRandomlyGoal(this));
@@ -159,5 +166,38 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	@Override
 	public void func_230258_H__() {
 		setAngerTime(ANGRY_RANGE.getRandomWithinRange(rand));
+	}
+
+	private static class EatLeavesGoal extends MoveToBlockGoal {
+
+		public EatLeavesGoal(CreatureEntity creatureIn, double speed, int length, int height) {
+			super(creatureIn, speed, length, height);
+		}
+
+		@Override
+		protected boolean shouldMoveTo(IWorldReader worldIn, BlockPos pos) {
+			return BlockTags.LEAVES.contains(worldIn.getBlockState(pos).getBlock());
+		}
+
+		// Destination block
+		@Override
+		protected BlockPos func_241846_j() {
+			return destinationBlock;
+		}
+		
+		@Override
+		public double getTargetDistanceSq() {
+			return 12;
+		}
+		
+		@Override
+		public void tick() {
+			if (getIsAboveDestination()) {
+				creature.world.destroyBlock(destinationBlock, false);
+			}
+			
+			super.tick();
+		}
+
 	}
 }
