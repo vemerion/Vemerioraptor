@@ -110,8 +110,8 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 	@Override
 	public void setRotationAngles(BrontosaurusEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
 			float netHeadYaw, float headPitch) {
-		head.rotateAngleY = (float) Math.toRadians(netHeadYaw) * 0.3f;
-		head.rotateAngleZ = (float) Math.toRadians(netHeadYaw) * 0.3f;
+		head.rotateAngleY = (float) Math.toRadians(netHeadYaw) * 0.25f;
+		head.rotateAngleZ = (float) Math.toRadians(netHeadYaw) * 0.25f;
 
 		rotateTail(limbSwing, limbSwingAmount, ageInTicks);
 	}
@@ -120,6 +120,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 	public void setLivingAnimations(BrontosaurusEntity entityIn, float limbSwing, float limbSwingAmount,
 			float partialTick) {
 		float attackingProgress = entityIn.getBrontosaurusAttackingProgress(partialTick);
+		float eatingProgress = entityIn.getEatingProgress(partialTick);
 		if (entityIn.isBrontosaurusAttacking()) {
 			body.rotateAngleX = -MathHelper.sin(MathHelper.lerp(attackingProgress, 0, (float) Math.PI))
 					* (float) Math.toRadians(35);
@@ -142,7 +143,24 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 			backLeftLeg.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 2f * limbSwingAmount * 0.4f;
 		}
 
-		rotateNeck(limbSwing, limbSwingAmount);
+		if (entityIn.isEating()) {
+			eatingAnimation(eatingProgress);
+		} else {
+			rotateNeck(limbSwing, limbSwingAmount);
+		}
+	}
+
+	private void eatingAnimation(float eatingProgress) {
+		float neckRotProgress = Math.min(1, eatingProgress * 2.5f);
+		List<ModelRenderer> neckParts = getNeckParts();
+		List<Float> neckStartRots = getNeckStartRots();
+		neckParts.get(0).rotateAngleX = -MathHelper.lerp(neckRotProgress, 0, (float) Math.toRadians(35))
+				+ neckStartRots.get(0);
+		neckParts.get(1).rotateAngleX = MathHelper.lerp(neckRotProgress, 0, (float) Math.toRadians(40))
+				+ neckStartRots.get(1);
+		neckParts.get(2).rotateAngleX = MathHelper.lerp(neckRotProgress, 0, (float) Math.toRadians(40))
+				+ neckStartRots.get(2);
+		head.rotateAngleX = MathHelper.cos(eatingProgress * (float) Math.PI * 7) * (float) Math.toRadians(15) - (float) Math.toRadians(20);
 	}
 
 	private void rotateNeck(float limbSwing, float limbSwingAmount) {

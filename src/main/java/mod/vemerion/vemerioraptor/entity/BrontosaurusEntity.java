@@ -4,7 +4,6 @@ import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.AgeableEntity;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
@@ -24,6 +23,9 @@ import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.Hand;
@@ -31,7 +33,6 @@ import net.minecraft.util.RangedInteger;
 import net.minecraft.util.TickRangeConverter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -39,12 +40,17 @@ import net.minecraft.world.server.ServerWorld;
 public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	private static final RangedInteger ANGRY_RANGE = TickRangeConverter.convertRange(20, 39);
+	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(VemerioraptorEntity.class,
+			DataSerializers.BOOLEAN);
+
+	private static final int EATING_TIME = 60;
 
 	private int angryTime;
 	private UUID angerTarget;
 	private boolean isBrontosaurusAttacking;
 	private float brontosaurusAttackingProgress;
 	private float prevBrontosaurusAttackingProgress;
+	private int eatingProgress;
 
 	public BrontosaurusEntity(EntityType<? extends BrontosaurusEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -58,6 +64,25 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 50.0D)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.2D)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
+	}
+
+	@Override
+	protected void registerData() {
+		super.registerData();
+		dataManager.register(EATING, false);
+	}
+
+	public boolean isEating() {
+		return dataManager.get(EATING);
+	}
+
+	private void setEating(boolean b) {
+		dataManager.set(EATING, b);
+	}
+
+	public float getEatingProgress(float partialTicks) {
+		return MathHelper.lerp(partialTicks, (float) Math.max(0, eatingProgress - 1) / EATING_TIME,
+				(float) eatingProgress / EATING_TIME);
 	}
 
 	@Override
@@ -82,6 +107,13 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 				prevBrontosaurusAttackingProgress = 0;
 			}
 		}
+
+		if (isEating()) {
+			eatingProgress++;
+		} else {
+			eatingProgress = 0;
+		}
+
 	}
 
 	public float getBrontosaurusAttackingProgress(float partialTicks) {
@@ -170,8 +202,11 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	private static class EatLeavesGoal extends MoveToBlockGoal {
 
-		public EatLeavesGoal(CreatureEntity creatureIn, double speed, int length, int height) {
+		private BrontosaurusEntity brontosaurus;
+
+		public EatLeavesGoal(BrontosaurusEntity creatureIn, double speed, int length, int height) {
 			super(creatureIn, speed, length, height);
+			this.brontosaurus = creatureIn;
 		}
 
 		@Override
@@ -184,18 +219,30 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 		protected BlockPos func_241846_j() {
 			return destinationBlock;
 		}
-		
+
 		@Override
 		public double getTargetDistanceSq() {
-			return 12;
+			return 6;
 		}
-		
+
+		@Override
+		public void resetTask() {
+			super.resetTask();
+			brontosaurus.setEating(false);
+		}
+
 		@Override
 		public void tick() {
 			if (getIsAboveDestination()) {
-				creature.world.destroyBlock(destinationBlock, false);
+				if (brontosaurus.eatingProgress < EATING_TIME)
+					brontosaurus.setEating(true);
 			}
-			
+
+			if (brontosaurus.eatingProgress >= EATING_TIME) {
+				creature.world.destroyBlock(destinationBlock, false);
+				brontosaurus.setEating(false);
+			}
+
 			super.tick();
 		}
 
