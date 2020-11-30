@@ -3,5 +3,7 @@
   "item.vemerioraptor.vemerioraptor_spawn_egg": "Vemerioraptor Spawn Egg",
   "item.vemerioraptor.vemerioraptor_claw_item": "Vemerioraptor Claw",
   "item.vemerioraptor.vemerioraptor_claw_weapon_item": "Claw Weapon",
+  "item.vemerioraptor.brontosaurus_meat_item": "Brontosaurus Meat",
+  "item.vemerioraptor.cooked_brontosaurus_meat_item": "Cooked Brontosaurus Meat",
   "itemGroup.vemerioraptor": "Vemerioraptor"
 }
