@@ -134,7 +134,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return new VemerioraptorEggEntity(world);
+		return Main.BRONTOSAURUS_EGG_ENTITY.create(world);
 	}
 
 	@Override

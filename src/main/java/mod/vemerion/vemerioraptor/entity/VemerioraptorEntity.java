@@ -134,7 +134,7 @@ public class VemerioraptorEntity extends DinosaurEntity implements IRideable {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return new VemerioraptorEggEntity(world);
+		return Main.VEMERIORAPTOR_EGG_ENTITY.create(world);
 	}
 
 	@Override

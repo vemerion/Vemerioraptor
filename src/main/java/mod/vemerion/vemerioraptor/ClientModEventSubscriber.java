@@ -1,9 +1,11 @@
 package mod.vemerion.vemerioraptor;
 
+import mod.vemerion.vemerioraptor.model.BrontosaurusEggModel;
 import mod.vemerion.vemerioraptor.model.BrontosaurusModel;
+import mod.vemerion.vemerioraptor.model.VemerioraptorEggModel;
 import mod.vemerion.vemerioraptor.model.VemerioraptorModel;
 import mod.vemerion.vemerioraptor.renderer.DinosaurRenderer;
-import mod.vemerion.vemerioraptor.renderer.VemerioraptorEggRenderer;
+import mod.vemerion.vemerioraptor.renderer.DinosaurEggRenderer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -19,6 +21,10 @@ public class ClientModEventSubscriber {
 				(manager) -> new DinosaurRenderer<>(manager, new VemerioraptorModel(), 0.4f));
 		RenderingRegistry.registerEntityRenderingHandler(Main.BRONTOSAURUS_ENTITY,
 				(manager) -> new DinosaurRenderer<>(manager, new BrontosaurusModel(), 1f));
-		RenderingRegistry.registerEntityRenderingHandler(Main.VEMERIORAPTOR_EGG_ENTITY, VemerioraptorEggRenderer::new);
+		
+		RenderingRegistry.registerEntityRenderingHandler(Main.VEMERIORAPTOR_EGG_ENTITY,
+				manager -> new DinosaurEggRenderer(manager, new VemerioraptorEggModel()));
+		RenderingRegistry.registerEntityRenderingHandler(Main.BRONTOSAURUS_EGG_ENTITY,
+				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
 	}
 }

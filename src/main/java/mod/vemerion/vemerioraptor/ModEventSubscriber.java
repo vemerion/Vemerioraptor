@@ -3,7 +3,7 @@ package mod.vemerion.vemerioraptor;
 import java.awt.Color;
 
 import mod.vemerion.vemerioraptor.entity.BrontosaurusEntity;
-import mod.vemerion.vemerioraptor.entity.VemerioraptorEggEntity;
+import mod.vemerion.vemerioraptor.entity.DinosaurEggEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
 import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
@@ -27,25 +27,21 @@ public class ModEventSubscriber {
 	private static EntityType<VemerioraptorEntity> vemerioraptorType;
 	private static EntityType<BrontosaurusEntity> brontosaurusType;
 
+	private static EntityType<DinosaurEggEntity> vemerioraptorEggType;
+	private static EntityType<DinosaurEggEntity> brontosaurusEggType;
+
 	@SubscribeEvent
 	public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
 		event.getRegistry().register(setup(vemerioraptorType, "vemerioraptor_entity"));
 		event.getRegistry().register(setup(brontosaurusType, "brontosaurus_entity"));
 
-		EntityType<VemerioraptorEggEntity> vemerioraptorEggType = EntityType.Builder
-				.<VemerioraptorEggEntity>create(VemerioraptorEggEntity::new, EntityClassification.CREATURE).size(1, 1)
-				.build("vemerioraptor_egg_entity");
 		event.getRegistry().register(setup(vemerioraptorEggType, "vemerioraptor_egg_entity"));
+		event.getRegistry().register(setup(brontosaurusEggType, "brontosaurus_egg_entity"));
 	}
 
 	@SubscribeEvent
 	public static void registerItem(RegistryEvent.Register<Item> event) {
-		vemerioraptorType = EntityType.Builder
-				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1.2f, 2f)
-				.build("vemerioraptor_entity");
-		brontosaurusType = EntityType.Builder
-				.<BrontosaurusEntity>create(BrontosaurusEntity::new, EntityClassification.CREATURE).size(1.5f, 2.2f)
-				.build("brontosaurus_entity");
+		initEntityTypes();
 
 		event.getRegistry()
 				.register(setup(new Item(new Item.Properties().group(ItemGroup.SEARCH)), "vemerioraptor_claw_item"));
@@ -60,11 +56,37 @@ public class ModEventSubscriber {
 		event.getRegistry().register(setup(cookedBrontosaurusMeatItem, "cooked_brontosaurus_meat_item"));
 
 		Item vemerioraptorSpawnEgg = new SpawnEggItem(vemerioraptorType, new Color(137, 115, 76).getRGB(),
-				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.MISC));
-		Item brontosaurusSpawnEgg = new SpawnEggItem(brontosaurusType, new Color(255, 255, 255).getRGB(),
-				new Color(255, 255, 255).getRGB(), new Item.Properties().group(ItemGroup.MISC));
+				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.SEARCH));
+		Item brontosaurusSpawnEgg = new SpawnEggItem(brontosaurusType, new Color(51, 107, 61).getRGB(),
+				new Color(90, 110, 147).getRGB(), new Item.Properties().group(ItemGroup.SEARCH));
+
+		Item vemerioraptorEggSpawnEgg = new SpawnEggItem(vemerioraptorEggType, new Color(217, 199, 139).getRGB(),
+				new Color(137, 115, 76).getRGB(), new Item.Properties().group(ItemGroup.SEARCH));
+		Item brontosaurusEggSpawnEgg = new SpawnEggItem(brontosaurusEggType, new Color(90, 110, 147).getRGB(),
+				new Color(51, 107, 61).getRGB(), new Item.Properties().group(ItemGroup.SEARCH));
+
 		event.getRegistry().registerAll(setup(vemerioraptorSpawnEgg, "vemerioraptor_spawn_egg"),
-				setup(brontosaurusSpawnEgg, "brontosaurus_spawn_egg"));
+				setup(brontosaurusSpawnEgg, "brontosaurus_spawn_egg"),
+				setup(vemerioraptorEggSpawnEgg, "vemerioraptor_egg_spawn_egg"),
+				setup(brontosaurusEggSpawnEgg, "brontosaurus_egg_spawn_egg"));
+	}
+
+	private static void initEntityTypes() {
+		vemerioraptorType = EntityType.Builder
+				.<VemerioraptorEntity>create(VemerioraptorEntity::new, EntityClassification.CREATURE).size(1.2f, 2f)
+				.build("vemerioraptor_entity");
+		brontosaurusType = EntityType.Builder
+				.<BrontosaurusEntity>create(BrontosaurusEntity::new, EntityClassification.CREATURE).size(1.5f, 2.2f)
+				.build("brontosaurus_entity");
+
+		vemerioraptorEggType = EntityType.Builder
+				.<DinosaurEggEntity>create((t, w) -> new DinosaurEggEntity(t, w, vemerioraptorType, 3),
+						EntityClassification.CREATURE)
+				.size(1, 1).build("vemerioraptor_egg_entity");
+		brontosaurusEggType = EntityType.Builder
+				.<DinosaurEggEntity>create((t, w) -> new DinosaurEggEntity(t, w, brontosaurusType, 1),
+						EntityClassification.CREATURE)
+				.size(1, 1).build("brontosaurus_egg_entity");
 	}
 
 	@SubscribeEvent
@@ -84,9 +106,11 @@ public class ModEventSubscriber {
 	}
 
 	private static void setEntityAttributes() {
-		GlobalEntityTypeAttributes.put(Main.VEMERIORAPTOR_ENTITY, VemerioraptorEntity.attributes().create());
-		GlobalEntityTypeAttributes.put(Main.BRONTOSAURUS_ENTITY, BrontosaurusEntity.attributes().create());
-		GlobalEntityTypeAttributes.put(Main.VEMERIORAPTOR_EGG_ENTITY, VemerioraptorEggEntity.attributes().create());
+		GlobalEntityTypeAttributes.put(vemerioraptorType, VemerioraptorEntity.attributes().create());
+		GlobalEntityTypeAttributes.put(brontosaurusType, BrontosaurusEntity.attributes().create());
+
+		GlobalEntityTypeAttributes.put(vemerioraptorEggType, DinosaurEggEntity.attributes().create());
+		GlobalEntityTypeAttributes.put(brontosaurusEggType, DinosaurEggEntity.attributes().create());
 	}
 
 	public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final String name) {

@@ -4,14 +4,18 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
-import mod.vemerion.vemerioraptor.entity.VemerioraptorEggEntity;
-import net.minecraft.client.renderer.entity.model.EntityModel;
+import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.entity.DinosaurEggEntity;
 import net.minecraft.client.renderer.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Created using Tabula 8.0.0
  */
-public class VemerioraptorEggModel extends EntityModel<VemerioraptorEggEntity> {
+public class VemerioraptorEggModel extends DinosaurEggModel {
+	
+	private static final ResourceLocation TEXTURES = new ResourceLocation(Main.MODID, "textures/entity/vemerioraptor_egg.png");
+	
 	public ModelRenderer egg1;
 	public ModelRenderer egg2;
 	public ModelRenderer egg3;
@@ -59,7 +63,7 @@ public class VemerioraptorEggModel extends EntityModel<VemerioraptorEggEntity> {
 	}
 
 	@Override
-	public void setRotationAngles(VemerioraptorEggEntity entityIn, float limbSwing, float limbSwingAmount,
+	public void setRotationAngles(DinosaurEggEntity entityIn, float limbSwing, float limbSwingAmount,
 			float ageInTicks, float netHeadYaw, float headPitch) {
 	}
 
@@ -70,5 +74,10 @@ public class VemerioraptorEggModel extends EntityModel<VemerioraptorEggEntity> {
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
+	}
+
+	@Override
+	public ResourceLocation getTexture() {
+		return TEXTURES;
 	}
 }
