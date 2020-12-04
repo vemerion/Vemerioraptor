@@ -1,6 +1,10 @@
 package mod.vemerion.vemerioraptor.entity;
 
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
+
+import com.google.common.collect.ImmutableList;
 
 import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.AgeableEntity;
@@ -20,8 +24,11 @@ import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.ResetAngerGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -33,6 +40,7 @@ import net.minecraft.util.RangedInteger;
 import net.minecraft.util.TickRangeConverter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -42,6 +50,9 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	private static final RangedInteger ANGRY_RANGE = TickRangeConverter.convertRange(20, 39);
 	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(VemerioraptorEntity.class,
 			DataSerializers.BOOLEAN);
+
+	private static final List<Item> FART_ITEMS = ImmutableList.of(Items.ACACIA_SAPLING, Items.BIRCH_SAPLING,
+			Items.DARK_OAK_SAPLING, Items.JUNGLE_SAPLING, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Main.MANURE_ITEM);
 
 	private static final int EATING_TIME = 60;
 
@@ -241,9 +252,22 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 			if (brontosaurus.eatingProgress >= EATING_TIME) {
 				creature.world.destroyBlock(destinationBlock, false);
 				brontosaurus.setEating(false);
+				fart();
 			}
 
 			super.tick();
+		}
+
+		private void fart() {
+			Random rand = brontosaurus.getRNG();
+
+			if (rand.nextDouble() < 0.5)
+				return;
+			
+			Vector3d pos = brontosaurus.getPositionVec().add(Vector3d.fromPitchYaw(brontosaurus.getPitchYaw()).scale(-1.5));
+			Item item = FART_ITEMS.get(rand.nextInt(FART_ITEMS.size()));
+			ItemEntity itemEntity = new ItemEntity(brontosaurus.world, pos.x, pos.y, pos.z, new ItemStack(item, rand.nextInt(5) + 1));
+			brontosaurus.world.addEntity(itemEntity);
 		}
 
 	}

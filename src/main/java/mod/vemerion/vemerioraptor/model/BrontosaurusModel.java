@@ -168,7 +168,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		List<ModelRenderer> neckParts = getNeckParts();
 		List<Float> neckStartRots = getNeckStartRots();
 		for (int i = 0; i < neckParts.size(); i++) {
-			neckParts.get(i).rotateAngleX = signum * MathHelper.cos(limbSwing * 0.6662f) * 2f * limbSwingAmount * 0.45f
+			neckParts.get(i).rotateAngleX = signum * MathHelper.cos(limbSwing * 0.6662f) * 2f * limbSwingAmount * 0.35f
 					+ neckStartRots.get(i);
 			signum = -signum;
 		}

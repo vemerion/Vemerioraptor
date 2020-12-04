@@ -9,6 +9,7 @@ import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -52,8 +53,10 @@ public class ModEventSubscriber {
 		Item brontosaurusMeatItem = new Item((new Item.Properties()).group(ItemGroup.SEARCH).food(brontosaurusMeat));
 		Item cookedBrontosaurusMeatItem = new Item(
 				(new Item.Properties()).group(ItemGroup.SEARCH).food(cookedBrontosaurusMeat));
+		Item manureItem = new BoneMealItem(new Item.Properties().group(ItemGroup.SEARCH));
 		event.getRegistry().register(setup(brontosaurusMeatItem, "brontosaurus_meat_item"));
 		event.getRegistry().register(setup(cookedBrontosaurusMeatItem, "cooked_brontosaurus_meat_item"));
+		event.getRegistry().register(setup(manureItem, "manure_item"));
 
 		Item vemerioraptorSpawnEgg = new SpawnEggItem(vemerioraptorType, new Color(137, 115, 76).getRGB(),
 				new Color(217, 199, 139).getRGB(), new Item.Properties().group(ItemGroup.SEARCH));

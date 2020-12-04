@@ -28,6 +28,9 @@ public class Main {
 
 	@ObjectHolder(Main.MODID + ":vemerioraptor_claw_item")
 	public static final Item VEMERIORAPTOR_CLAW_ITEM = null;
+	
+	@ObjectHolder(Main.MODID + ":manure_item")
+	public static final Item MANURE_ITEM = null;
 
 	@ObjectHolder(Main.MODID + ":raptor_ambient_sound")
 	public static final SoundEvent RAPTOR_AMBIENT_SOUND = null;

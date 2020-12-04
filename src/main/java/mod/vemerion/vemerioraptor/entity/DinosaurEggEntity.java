@@ -31,8 +31,6 @@ public class DinosaurEggEntity extends AgeableEntity {
 	@Override
 	public void livingTick() {
 		super.livingTick();
-		addGrowth(5);
-		System.out.println(getGrowingAge());
 	}
 
 	@Override
