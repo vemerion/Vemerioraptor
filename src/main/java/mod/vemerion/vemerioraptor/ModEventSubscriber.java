@@ -7,8 +7,10 @@ import mod.vemerion.vemerioraptor.entity.DinosaurEggEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
 import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
+import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
@@ -16,6 +18,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.SpawnEggItem;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -106,6 +109,13 @@ public class ModEventSubscriber {
 	@SubscribeEvent
 	public static void registerAttributes(ParallelDispatchEvent event) {
 		event.enqueueWork(() -> setEntityAttributes());
+		event.enqueueWork(() -> setEntitySpawnPlacements());
+	}
+
+	private static void setEntitySpawnPlacements() {
+		EntitySpawnPlacementRegistry.register(brontosaurusType, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND,
+				Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
+
 	}
 
 	private static void setEntityAttributes() {

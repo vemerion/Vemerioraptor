@@ -17,11 +17,17 @@ public class ForgeEventSubscriber {
 	private static final Set<Biome.Category> RAPTOR_BIOMES = ImmutableSet.of(Biome.Category.DESERT,
 			Biome.Category.FOREST, Biome.Category.JUNGLE, Biome.Category.MESA, Biome.Category.PLAINS,
 			Biome.Category.SAVANNA, Biome.Category.SWAMP);
+	
+	private static final Set<Biome.Category> BRONTOSAURUS_BIOMES = ImmutableSet.of(Biome.Category.FOREST,
+			Biome.Category.JUNGLE, Biome.Category.SAVANNA);
 
 	@SubscribeEvent
 	public static void onBiomeLoad(BiomeLoadingEvent event) {
 			if (RAPTOR_BIOMES.contains(event.getCategory())) {
 				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(Main.VEMERIORAPTOR_ENTITY, 4, 1, 1));
+			}
+			if (BRONTOSAURUS_BIOMES.contains(event.getCategory())) {
+				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(Main.BRONTOSAURUS_ENTITY, 5, 1, 2));
 			}
 	}
 }
