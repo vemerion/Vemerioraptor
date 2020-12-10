@@ -41,5 +41,14 @@ public class Main {
 	@ObjectHolder(Main.MODID + ":raptor_hurt_sound")
 	public static final SoundEvent RAPTOR_HURT_SOUND = null;
 
+	@ObjectHolder(Main.MODID + ":brontosaurus_ambient_sound")
+	public static final SoundEvent BRONTOSAURUS_AMBIENT_SOUND = null;
+
+	@ObjectHolder(Main.MODID + ":brontosaurus_death_sound")
+	public static final SoundEvent BRONTOSAURUS_DEATH_SOUND = null;
+
+	@ObjectHolder(Main.MODID + ":brontosaurus_hurt_sound")
+	public static final SoundEvent BRONTOSAURUS_HURT_SOUND = null;  
+	
 	public static final VemerioraptorItemGroup VEMERIORAPTOR_ITEM_GROUP = new VemerioraptorItemGroup();
 }

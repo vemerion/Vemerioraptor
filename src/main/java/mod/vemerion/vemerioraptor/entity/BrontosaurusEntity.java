@@ -35,8 +35,10 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.RangedInteger;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.TickRangeConverter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -81,6 +83,21 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	protected void registerData() {
 		super.registerData();
 		dataManager.register(EATING, false);
+	}
+	
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return Main.BRONTOSAURUS_AMBIENT_SOUND;
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return Main.BRONTOSAURUS_HURT_SOUND;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return Main.BRONTOSAURUS_DEATH_SOUND;
 	}
 
 	public boolean isEating() {

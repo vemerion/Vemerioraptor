@@ -103,6 +103,12 @@ public class ModEventSubscriber {
 		event.getRegistry().register(setup(raptor_death_sound, "raptor_death_sound"));
 		SoundEvent raptor_hurt_sound = new SoundEvent(new ResourceLocation(Main.MODID, "raptor_hurt_sound"));
 		event.getRegistry().register(setup(raptor_hurt_sound, "raptor_hurt_sound"));
+		SoundEvent brontosaurus_ambient_sound = new SoundEvent(new ResourceLocation(Main.MODID, "brontosaurus_ambient_sound"));
+		event.getRegistry().register(setup(brontosaurus_ambient_sound, "brontosaurus_ambient_sound"));
+		SoundEvent brontosaurus_death_sound = new SoundEvent(new ResourceLocation(Main.MODID, "brontosaurus_death_sound"));
+		event.getRegistry().register(setup(brontosaurus_death_sound, "brontosaurus_death_sound"));
+		SoundEvent brontosaurus_hurt_sound = new SoundEvent(new ResourceLocation(Main.MODID, "brontosaurus_hurt_sound"));
+		event.getRegistry().register(setup(brontosaurus_hurt_sound, "brontosaurus_hurt_sound"));   
 
 	}
 

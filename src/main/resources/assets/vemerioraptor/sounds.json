@@ -1,6 +1,5 @@
 {
   "raptor_ambient_sound": {
-    "category": "hostile",
     "sounds": [
       {
         "name": "vemerioraptor:raptor_ambient_sound",
@@ -9,7 +8,6 @@
     ]
   },
   "raptor_death_sound": {
-    "category": "hostile",
     "sounds": [
       {
         "name": "vemerioraptor:raptor_death_sound",
@@ -18,10 +16,33 @@
     ]
   },
   "raptor_hurt_sound": {
-    "category": "hostile",
     "sounds": [
       {
         "name": "vemerioraptor:raptor_hurt_sound",
+        "stream": false
+      }
+    ]
+  },
+  "brontosaurus_ambient_sound": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:brontosaurus_ambient_sound",
+        "stream": false
+      }
+    ]
+  },
+  "brontosaurus_death_sound": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:brontosaurus_death_sound",
+        "stream": false
+      }
+    ]
+  },
+  "brontosaurus_hurt_sound": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:brontosaurus_hurt_sound",
         "stream": false
       }
     ]
