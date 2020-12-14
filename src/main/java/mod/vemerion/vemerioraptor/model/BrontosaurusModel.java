@@ -33,6 +33,8 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 	public ModelRenderer tail2;
 	public ModelRenderer tail3;
 	public ModelRenderer tail4;
+	public ModelRenderer mouth1;
+	public ModelRenderer mouth2;
 
 	public BrontosaurusModel() {
 		this.textureWidth = 128;
@@ -48,7 +50,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		this.neck3.addBox(-3.0F, -3.0F, -14.0F, 6.0F, 6.0F, 14.0F, 0.0F, 0.0F, 0.0F);
 		this.setRotateAngle(neck3, -0.23457224414434488F, 0.0F, 0.0F);
 		this.neck1 = new ModelRenderer(this, 28, 52);
-		this.neck1.setRotationPoint(0.0F, -1.0F, -24.0F);
+		this.neck1.setRotationPoint(0.0F, -1.0F, -23.0F);
 		this.neck1.addBox(-5.0F, -5.0F, -18.0F, 10.0F, 10.0F, 18.0F, 0.0F, 0.0F, 0.0F);
 		this.setRotateAngle(neck1, -0.46914448828868976F, 0.0F, 0.0F);
 		this.tail2 = new ModelRenderer(this, 70, 68);
@@ -85,6 +87,12 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		this.neck2.setRotationPoint(0.0F, 0.0F, -15.0F);
 		this.neck2.addBox(-4.0F, -4.0F, -18.0F, 8.0F, 8.0F, 18.0F, 0.0F, 0.0F, 0.0F);
 		this.setRotateAngle(neck2, -0.5864306020384839F, 0.0F, 0.0F);
+		this.mouth1 = new ModelRenderer(this, 68, 92);
+		this.mouth1.setRotationPoint(0.0F, 11.0F, -5.5F);
+		this.mouth1.addBox(-4.0F, 0.0F, -2.5F, 8.0F, 4.0F, 5.0F, 0.0F, 0.0F, 0.0F);
+		this.mouth2 = new ModelRenderer(this, 94, 92);
+		this.mouth2.setRotationPoint(0.0F, 0.0F, 3.5F);
+		this.mouth2.addBox(-4.0F, 0.0F, 0.0F, 8.0F, 4.0F, 2.0F, 0.0F, 0.0F, 0.0F);
 		this.body.addChild(this.backLeftLeg);
 		this.body.addChild(this.frontLeftLeg);
 		this.neck2.addChild(this.neck3);
@@ -97,6 +105,8 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		this.body.addChild(this.frontRightLeg);
 		this.body.addChild(this.tail1);
 		this.neck1.addChild(this.neck2);
+		this.head.addChild(this.mouth1);
+		this.mouth1.addChild(this.mouth2);
 	}
 
 	@Override
@@ -160,7 +170,8 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 				+ neckStartRots.get(1);
 		neckParts.get(2).rotateAngleX = MathHelper.lerp(neckRotProgress, 0, (float) Math.toRadians(40))
 				+ neckStartRots.get(2);
-		head.rotateAngleX = MathHelper.cos(eatingProgress * (float) Math.PI * 7) * (float) Math.toRadians(15) - (float) Math.toRadians(20);
+		head.rotateAngleX = MathHelper.cos(eatingProgress * (float) Math.PI * 7) * (float) Math.toRadians(15)
+				- (float) Math.toRadians(20);
 	}
 
 	private void rotateNeck(float limbSwing, float limbSwingAmount) {
