@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 
 import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.AgeableEntity;
+import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.IAngerable;
 import net.minecraft.entity.LivingEntity;
@@ -50,7 +51,7 @@ import net.minecraft.world.server.ServerWorld;
 public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	private static final RangedInteger ANGRY_RANGE = TickRangeConverter.convertRange(20, 39);
-	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(VemerioraptorEntity.class,
+	private static final DataParameter<Boolean> EATING = EntityDataManager.createKey(BrontosaurusEntity.class,
 			DataSerializers.BOOLEAN);
 
 	private static final List<Item> FART_ITEMS = ImmutableList.of(Items.ACACIA_SAPLING, Items.BIRCH_SAPLING,
@@ -235,6 +236,11 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 		public EatLeavesGoal(BrontosaurusEntity creatureIn, double speed, int length, int height) {
 			super(creatureIn, speed, length, height);
 			this.brontosaurus = creatureIn;
+		}
+		
+		@Override
+		protected int getRunDelay(CreatureEntity creatureIn) {
+			return super.getRunDelay(creatureIn) * 3;
 		}
 
 		@Override

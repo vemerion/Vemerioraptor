@@ -59,7 +59,7 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		this.setRotateAngle(tail2, 0.11728612207217244F, 0.0F, 0.0F);
 		this.head = new ModelRenderer(this, 0, 0);
 		this.head.setRotationPoint(0.0F, -3.0F, -12.0F);
-		this.head.addBox(-4.0F, -1.0F, -8.0F, 8.0F, 14.0F, 8.0F, 0.0F, 0.0F, 0.0F);
+        this.head.addBox(-4.0F, -1.0F, -8.0F, 8.0F, 12.0F, 8.0F, 0.0F, 0.0F, 0.0F); 
 		this.backRightLeg = new ModelRenderer(this, 0, 52);
 		this.backRightLeg.mirror = true;
 		this.backRightLeg.setRotationPoint(-5.0F, -4.0F, 0.0F);
