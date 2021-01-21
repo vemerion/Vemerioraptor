@@ -2,6 +2,7 @@ package mod.vemerion.vemerioraptor;
 
 import mod.vemerion.vemerioraptor.entity.BrontosaurusEntity;
 import mod.vemerion.vemerioraptor.entity.DinosaurEggEntity;
+import mod.vemerion.vemerioraptor.entity.PlesiosaurusEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
 import mod.vemerion.vemerioraptor.item.VemerioraptorItemGroup;
 import net.minecraft.entity.EntityType;
@@ -19,6 +20,10 @@ public class Main {
 
 	@ObjectHolder(Main.MODID + ":brontosaurus_entity")
 	public static final EntityType<BrontosaurusEntity> BRONTOSAURUS_ENTITY = null;
+	
+	@ObjectHolder(Main.MODID + ":plesiosaurus_entity")
+	public static final EntityType<PlesiosaurusEntity> PLESIOSAURUS_ENTITY = null;
+
 
 	@ObjectHolder(Main.MODID + ":vemerioraptor_egg_entity")
 	public static final EntityType<DinosaurEggEntity> VEMERIORAPTOR_EGG_ENTITY = null;

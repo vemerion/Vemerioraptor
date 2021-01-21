@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import mod.vemerion.vemerioraptor.entity.BrontosaurusEntity;
 import mod.vemerion.vemerioraptor.entity.DinosaurEggEntity;
+import mod.vemerion.vemerioraptor.entity.PlesiosaurusEntity;
 import mod.vemerion.vemerioraptor.entity.VemerioraptorEntity;
 import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
@@ -30,6 +31,7 @@ public class ModEventSubscriber {
 
 	private static EntityType<VemerioraptorEntity> vemerioraptorType;
 	private static EntityType<BrontosaurusEntity> brontosaurusType;
+	private static EntityType<PlesiosaurusEntity> plesiosaurusType;
 
 	private static EntityType<DinosaurEggEntity> vemerioraptorEggType;
 	private static EntityType<DinosaurEggEntity> brontosaurusEggType;
@@ -38,6 +40,7 @@ public class ModEventSubscriber {
 	public static void registerEntity(RegistryEvent.Register<EntityType<?>> event) {
 		event.getRegistry().register(setup(vemerioraptorType, "vemerioraptor_entity"));
 		event.getRegistry().register(setup(brontosaurusType, "brontosaurus_entity"));
+		event.getRegistry().register(setup(plesiosaurusType, "plesiosaurus_entity"));
 
 		event.getRegistry().register(setup(vemerioraptorEggType, "vemerioraptor_egg_entity"));
 		event.getRegistry().register(setup(brontosaurusEggType, "brontosaurus_egg_entity"));
@@ -84,6 +87,9 @@ public class ModEventSubscriber {
 		brontosaurusType = EntityType.Builder
 				.<BrontosaurusEntity>create(BrontosaurusEntity::new, EntityClassification.CREATURE).size(1.5f, 2.2f)
 				.build("brontosaurus_entity");
+		plesiosaurusType = EntityType.Builder
+				.<PlesiosaurusEntity>create(PlesiosaurusEntity::new, EntityClassification.CREATURE).size(1.3f, 1f)
+				.build("plesiosaurus_entity");
 
 		vemerioraptorEggType = EntityType.Builder
 				.<DinosaurEggEntity>create((t, w) -> new DinosaurEggEntity(t, w, vemerioraptorType, 3),
@@ -127,6 +133,7 @@ public class ModEventSubscriber {
 	private static void setEntityAttributes() {
 		GlobalEntityTypeAttributes.put(vemerioraptorType, VemerioraptorEntity.attributes().create());
 		GlobalEntityTypeAttributes.put(brontosaurusType, BrontosaurusEntity.attributes().create());
+		GlobalEntityTypeAttributes.put(plesiosaurusType, PlesiosaurusEntity.attributes().create());
 
 		GlobalEntityTypeAttributes.put(vemerioraptorEggType, DinosaurEggEntity.attributes().create());
 		GlobalEntityTypeAttributes.put(brontosaurusEggType, DinosaurEggEntity.attributes().create());
