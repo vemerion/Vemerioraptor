@@ -10,7 +10,6 @@ import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.Food;
@@ -21,6 +20,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.gen.Heightmap;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
@@ -117,10 +117,19 @@ public class ModEventSubscriber {
 		event.getRegistry().register(setup(brontosaurus_hurt_sound, "brontosaurus_hurt_sound"));   
 
 	}
+	
+	@SubscribeEvent
+	public static void onRegisterEntityAttributes(EntityAttributeCreationEvent event) {
+		event.put(vemerioraptorType, VemerioraptorEntity.attributes().create());
+		event.put(brontosaurusType, BrontosaurusEntity.attributes().create());
+		event.put(plesiosaurusType, PlesiosaurusEntity.attributes().create());
+
+		event.put(vemerioraptorEggType, DinosaurEggEntity.attributes().create());
+		event.put(brontosaurusEggType, DinosaurEggEntity.attributes().create());
+	}
 
 	@SubscribeEvent
-	public static void registerAttributes(ParallelDispatchEvent event) {
-		event.enqueueWork(() -> setEntityAttributes());
+	public static void setEntitySpawns(ParallelDispatchEvent event) {
 		event.enqueueWork(() -> setEntitySpawnPlacements());
 	}
 
@@ -128,15 +137,6 @@ public class ModEventSubscriber {
 		EntitySpawnPlacementRegistry.register(brontosaurusType, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND,
 				Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
 
-	}
-
-	private static void setEntityAttributes() {
-		GlobalEntityTypeAttributes.put(vemerioraptorType, VemerioraptorEntity.attributes().create());
-		GlobalEntityTypeAttributes.put(brontosaurusType, BrontosaurusEntity.attributes().create());
-		GlobalEntityTypeAttributes.put(plesiosaurusType, PlesiosaurusEntity.attributes().create());
-
-		GlobalEntityTypeAttributes.put(vemerioraptorEggType, DinosaurEggEntity.attributes().create());
-		GlobalEntityTypeAttributes.put(brontosaurusEggType, DinosaurEggEntity.attributes().create());
 	}
 
 	public static <T extends IForgeRegistryEntry<T>> T setup(final T entry, final String name) {
