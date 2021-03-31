@@ -9,8 +9,10 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
 import net.minecraft.entity.ai.goal.FindWaterGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
+import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -61,6 +63,8 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new FindWaterGoal(this));
 		goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.6, true));
+		goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
+		goalSelector.addGoal(4, new LookRandomlyGoal(this));
 		targetSelector.addGoal(4,
 				new NearestAttackableTargetGoal<>(this, AbstractGroupFishEntity.class, 10, true, false, null));
 	}
@@ -149,7 +153,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 				if (Math.abs(dx) > 0.0001 || Math.abs(dz) > 0.0001) {
 					float rotate = (float) (MathHelper.atan2(dz, dx) * (double) (180 / Math.PI)) - 90f;
-					plesiosaurus.rotationYaw = limitAngle(plesiosaurus.rotationYaw, rotate, 90);
+					plesiosaurus.rotationYaw = limitAngle(plesiosaurus.rotationYaw, rotate, 8);
 					plesiosaurus.renderYawOffset = plesiosaurus.rotationYaw;
 				}
 
