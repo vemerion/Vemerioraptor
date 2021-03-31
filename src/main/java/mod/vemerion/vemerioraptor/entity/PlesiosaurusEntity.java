@@ -1,14 +1,19 @@
 package mod.vemerion.vemerioraptor.entity;
 
+import java.util.EnumSet;
+
 import mod.vemerion.vemerioraptor.Main;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.MobEntity;
+import net.minecraft.entity.SpawnReason;
+import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
-import net.minecraft.entity.ai.goal.FindWaterGoal;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
@@ -21,7 +26,11 @@ import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.DifficultyInstance;
+import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -45,6 +54,13 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	}
 
 	@Override
+	public ILivingEntityData onInitialSpawn(IServerWorld worldIn, DifficultyInstance difficultyIn, SpawnReason reason,
+			ILivingEntityData spawnDataIn, CompoundNBT dataTag) {
+		setAir(getMaxAir());
+		return super.onInitialSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+	}
+
+	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
 		return Main.BRONTOSAURUS_EGG_ENTITY.create(world);
 	}
@@ -61,7 +77,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	protected void registerGoals() {
-		goalSelector.addGoal(0, new FindWaterGoal(this));
+		goalSelector.addGoal(0, new MoveToWaterGoal(this));
 		goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.6, true));
 		goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
 		goalSelector.addGoal(4, new LookRandomlyGoal(this));
@@ -77,6 +93,11 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	@Override
 	public boolean canBreatheUnderwater() {
 		return true;
+	}
+
+	@Override
+	public int getMaxAir() {
+		return 600;
 	}
 
 	@Override
@@ -175,5 +196,50 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 			return entity.isOnGround() || isInLiquid();
 		}
 
+	}
+
+	private static class MoveToWaterGoal extends Goal {
+
+		private static final int RANGE = 4;
+		private static final BlockPos POS_RANGE = new BlockPos(RANGE, RANGE, RANGE);
+
+		private PlesiosaurusEntity plesiosaurus;
+		private Vector3d target = null;
+
+		private MoveToWaterGoal(PlesiosaurusEntity plesiosaurus) {
+			this.plesiosaurus = plesiosaurus;
+			setMutexFlags(EnumSet.of(Flag.MOVE));
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return plesiosaurus.isOnGround()
+					&& !plesiosaurus.world.getFluidState(plesiosaurus.getPosition()).isTagged(FluidTags.WATER);
+		}
+		
+		@Override
+		public void resetTask() {
+			target = null;
+		}
+
+		@Override
+		public void tick() {
+			if (target == null) {
+				BlockPos center = plesiosaurus.getPosition();
+				for (BlockPos p : BlockPos.getAllInBoxMutable(center.subtract(POS_RANGE), center.add(POS_RANGE))) {
+					if (plesiosaurus.world.getFluidState(p).isTagged(FluidTags.WATER)) {
+						target = Vector3d.copyCenteredHorizontally(p);
+						break;
+					}
+				}
+				
+				if (target == null)
+					target = RandomPositionGenerator.findRandomTarget(plesiosaurus, 2, 0);
+				
+				if (target != null)
+					plesiosaurus.getMoveHelper().setMoveTo(target.getX(), target.getY(), target.getZ(), 1);
+			} else if (plesiosaurus.getDistanceSq(target) < 1)
+				target = null;
+		}
 	}
 }
