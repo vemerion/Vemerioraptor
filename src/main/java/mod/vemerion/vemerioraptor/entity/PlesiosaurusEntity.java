@@ -28,7 +28,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	public PlesiosaurusEntity(EntityType<? extends PlesiosaurusEntity> type, World worldIn) {
 		super(type, worldIn);
-		this.setPathPriority(PathNodeType.WATER, 0.0F);
+		this.setPathPriority(PathNodeType.WATER, 0);
 		this.moveController = new MoveHelperController(this);
 	}
 
@@ -37,9 +37,9 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 50.0D)
-				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 1D)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D);
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 20)
+				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5)
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2);
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	protected PathNavigator createNavigator(World worldIn) {
-		return new SwimmerPathNavigator(this, worldIn);
+		return new Navigator(this, worldIn);
 	}
 
 	@Override
@@ -124,19 +124,25 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 		@Override
 		public void tick() {
-			if (plesiosaurus.areEyesInFluid(FluidTags.WATER)) {
+			boolean inWater = plesiosaurus.areEyesInFluid(FluidTags.WATER);
+			if (inWater)
 				plesiosaurus.setMotion(plesiosaurus.getMotion().add(0, 0.005, 0));
-			}
-			if (action == MovementController.Action.MOVE_TO && !plesiosaurus.getNavigator().noPath()) {
+			if (action == MovementController.Action.MOVE_TO) {
 				float maxSpeed = (float) (speed * plesiosaurus.getAttributeValue(Attributes.MOVEMENT_SPEED));
+				if (!inWater)
+					maxSpeed *= 0.4;
 				plesiosaurus.setAIMoveSpeed(MathHelper.lerp(0.125f, plesiosaurus.getAIMoveSpeed(), maxSpeed));
 				double dx = posX - plesiosaurus.getPosX();
 				double dy = posY - plesiosaurus.getPosY();
 				double dz = posZ - plesiosaurus.getPosZ();
-				System.out.println("THIS" + dy);
+				double distance = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
+
+				if (distance < 0.1) {
+					plesiosaurus.setMoveForward(0);
+					return;
+				}
 
 				if (Math.abs(dy) > 0.0001) {
-					double distance = MathHelper.sqrt(dx * dx + dy * dy + dz * dz);
 					plesiosaurus.setMotion(
 							plesiosaurus.getMotion().add(0, plesiosaurus.getAIMoveSpeed() * (dy / distance) * 0.1, 0));
 				}
@@ -151,5 +157,19 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 				plesiosaurus.setAIMoveSpeed(0);
 			}
 		}
+	}
+
+	private static class Navigator extends SwimmerPathNavigator {
+
+		private Navigator(MobEntity entitylivingIn, World worldIn) {
+			super(entitylivingIn, worldIn);
+
+		}
+
+		@Override
+		protected boolean canNavigate() {
+			return entity.isOnGround() || isInLiquid();
+		}
+
 	}
 }
