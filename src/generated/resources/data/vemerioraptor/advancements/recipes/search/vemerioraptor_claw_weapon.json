@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vemerioraptor:vemerioraptor_claw_weapon"
+    ]
+  },
+  "criteria": {
+    "has_vemerioraptor_claw": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vemerioraptor:vemerioraptor_claw"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vemerioraptor:vemerioraptor_claw_weapon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_vemerioraptor_claw",
+      "has_the_recipe"
+    ]
+  ]
+}

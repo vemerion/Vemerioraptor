@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vemerioraptor:cooked_brontosaurus_meat"
+    ]
+  },
+  "criteria": {
+    "has_brontosaurus_meat": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vemerioraptor:brontosaurus_meat"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vemerioraptor:cooked_brontosaurus_meat"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_brontosaurus_meat",
+      "has_the_recipe"
+    ]
+  ]
+}

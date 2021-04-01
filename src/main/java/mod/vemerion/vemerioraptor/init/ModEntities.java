@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.tuple.Pair;
+import com.google.common.collect.ImmutableList;
 
 import mod.vemerion.vemerioraptor.Main;
 import mod.vemerion.vemerioraptor.entity.BrontosaurusEntity;
@@ -16,7 +16,6 @@ import mod.vemerion.vemerioraptor.helper.Helper;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntitySpawnPlacementRegistry;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.item.Item;
@@ -29,6 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.ParallelDispatchEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.ObjectHolder;
 
 @ObjectHolder(value = Main.MODID)
@@ -40,48 +40,63 @@ public class ModEntities {
 	public static final EntityType<PlesiosaurusEntity> PLESIOSAURUS = null;
 	public static final EntityType<DinosaurEggEntity> VEMERIORAPTOR_EGG = null;
 	public static final EntityType<DinosaurEggEntity> BRONTOSAURUS_EGG = null;
+	public static final EntityType<DinosaurEggEntity> PLESIOSAURUS_EGG = null;
 
-	private static List<EntityType<?>> DINOSAURS;
-	private static List<EntityType<?>> DINOSAUR_EGGS;
-	private static List<SpawnEggItem> SPAWN_EGGS;
-	private static List<Pair<EntityType<? extends LivingEntity>, Supplier<AttributeModifierMap.MutableAttribute>>> ATTRIBUTES;
+	private static List<DinosaurBuilder<? extends DinosaurEntity>> DINOSAUR_BUILDERS;
+
+	public static List<SpawnEggItem> getSpawnEggs() {
+		ImmutableList.Builder<SpawnEggItem> eggs = ImmutableList.builder();
+		for (DinosaurBuilder<?> builder : DINOSAUR_BUILDERS) {
+			eggs.add(builder.getDinosaurSpawnEgg());
+			eggs.add(builder.getDinosaurEggSpawnEgg());
+		}
+		return eggs.build();
+	}
+	
+	public static List<DinosaurBuilder<? extends DinosaurEntity>> getDinosaurBuilders() {
+		return ImmutableList.copyOf(DINOSAUR_BUILDERS);
+	}
 
 	@SubscribeEvent
 	public static void onRegisterEntity(RegistryEvent.Register<EntityType<?>> event) {
-		event.getRegistry().registerAll(DINOSAURS.toArray(new EntityType<?>[0]));
-		event.getRegistry().registerAll(DINOSAUR_EGGS.toArray(new EntityType<?>[0]));
+		IForgeRegistry<EntityType<?>> reg = event.getRegistry();
+		for (DinosaurBuilder<?> builder : DINOSAUR_BUILDERS) {
+			reg.register(builder.getDinosaur());
+			reg.register(builder.getDinosaurEgg());
+		}
 	}
 
 	@SubscribeEvent
 	public static void onRegisterSpawnEggs(RegistryEvent.Register<Item> event) {
 		initDinosaurs();
-		event.getRegistry().registerAll(SPAWN_EGGS.toArray(new SpawnEggItem[0]));
+		event.getRegistry().registerAll(getSpawnEggs().toArray(new SpawnEggItem[0]));
 	}
 
 	private static void initDinosaurs() {
-		DINOSAURS = new ArrayList<>();
-		DINOSAUR_EGGS = new ArrayList<>();
-		SPAWN_EGGS = new ArrayList<>();
-		ATTRIBUTES = new ArrayList<>();
+		DINOSAUR_BUILDERS = new ArrayList<>();
 
-		new DinosaurBuilder<VemerioraptorEntity>("vemerioraptor").factory(VemerioraptorEntity::new)
-				.classification(EntityClassification.CREATURE).size(1.2f, 2f).spawnCount(3).primaryColor(137, 115, 76)
-				.secondaryColor(217, 199, 139).attributes(() -> VemerioraptorEntity.attributes()).build();
+		DINOSAUR_BUILDERS.add(new DinosaurBuilder<VemerioraptorEntity>("vemerioraptor")
+				.factory(VemerioraptorEntity::new).classification(EntityClassification.CREATURE).size(1.2f, 2f)
+				.spawnCount(3).primaryColor(137, 115, 76).secondaryColor(217, 199, 139)
+				.attributes(() -> VemerioraptorEntity.attributes()).english("Vemerioraptor"));
 
-		new DinosaurBuilder<BrontosaurusEntity>("brontosaurus").factory(BrontosaurusEntity::new)
+		DINOSAUR_BUILDERS.add(new DinosaurBuilder<BrontosaurusEntity>("brontosaurus").factory(BrontosaurusEntity::new)
 				.classification(EntityClassification.CREATURE).size(1.5f, 2.2f).spawnCount(1).primaryColor(51, 107, 61)
-				.secondaryColor(90, 110, 147).attributes(() -> BrontosaurusEntity.attributes()).build();
+				.secondaryColor(90, 110, 147).attributes(() -> BrontosaurusEntity.attributes())
+				.english("Brontosaurus"));
 
-		new DinosaurBuilder<PlesiosaurusEntity>("plesiosaurus").factory(PlesiosaurusEntity::new)
+		DINOSAUR_BUILDERS.add(new DinosaurBuilder<PlesiosaurusEntity>("plesiosaurus").factory(PlesiosaurusEntity::new)
 				.classification(EntityClassification.WATER_CREATURE).size(1.3f, 1f).spawnCount(2)
-				.primaryColor(80, 180, 235).attributes(() -> PlesiosaurusEntity.attributes())
-				.secondaryColor(42, 84, 107).build();
+				.primaryColor(80, 180, 235).attributes(() -> PlesiosaurusEntity.attributes()).english("Plesiosaurus")
+				.secondaryColor(42, 84, 107));
 	}
 
 	@SubscribeEvent
 	public static void onRegisterEntityAttributes(EntityAttributeCreationEvent event) {
-		for (Pair<EntityType<? extends LivingEntity>, Supplier<AttributeModifierMap.MutableAttribute>> attr : ATTRIBUTES)
-			event.put(attr.getLeft(), attr.getRight().get().create());
+		for (DinosaurBuilder<?> builder : DINOSAUR_BUILDERS) {
+			event.put(builder.getDinosaur(), builder.attributes.get().create());
+			event.put(builder.getDinosaurEgg(), DinosaurEggEntity.attributes().create());
+		}
 	}
 
 	@SubscribeEvent
@@ -95,7 +110,7 @@ public class ModEntities {
 
 	}
 
-	private static class DinosaurBuilder<T extends DinosaurEntity> {
+	public static class DinosaurBuilder<T extends DinosaurEntity> {
 		private EntityType.IFactory<T> factory;
 		private EntityClassification classification;
 		private float width;
@@ -108,7 +123,13 @@ public class ModEntities {
 		private int secondaryGreen;
 		private int secondaryBlue;
 		private String name;
+		private String english;
 		private Supplier<AttributeModifierMap.MutableAttribute> attributes;
+
+		EntityType<T> dinosaur;
+		EntityType<DinosaurEggEntity> dinosaurEgg;
+		SpawnEggItem dinosaurSpawnEgg;
+		SpawnEggItem dinosaurEggSpawnEgg;
 
 		private DinosaurBuilder(String name) {
 			this.name = name;
@@ -154,31 +175,62 @@ public class ModEntities {
 			return this;
 		}
 
-		private void build() {
-			EntityType<T> dinosaur = Init.setup(
-					EntityType.Builder.<T>create(factory, classification).size(width, height).build(""), name);
-			EntityType<DinosaurEggEntity> dinosaurEgg = Init.setup(EntityType.Builder
-					.<DinosaurEggEntity>create((t, w) -> new DinosaurEggEntity(t, w, dinosaur, spawnCount),
-							EntityClassification.CREATURE)
-					.size(1, 1).build(""), name + "_egg");
+		private DinosaurBuilder<T> english(String s) {
+			this.english = s;
+			return this;
+		}
 
-			DINOSAURS.add(dinosaur);
-			DINOSAUR_EGGS.add(dinosaurEgg);
+		public EntityType<T> getDinosaur() {
+			if (dinosaur == null)
+				dinosaur = Init.setup(
+						EntityType.Builder.<T>create(factory, classification).size(width, height).build(""), name);
+			return dinosaur;
+		}
 
-			SPAWN_EGGS
-					.add(Init.setup(
-							new SpawnEggItem(dinosaur, Helper.color(primaryRed, primaryGreen, primaryBlue, 255),
-									Helper.color(secondaryRed, secondaryGreen, secondaryBlue, 255),
-									new Item.Properties().group(ItemGroup.SEARCH)),
-							name + "_spawn_egg"));
-			SPAWN_EGGS.add(Init.setup(
-					new SpawnEggItem(dinosaurEgg, Helper.color(secondaryRed, secondaryGreen, secondaryBlue, 255),
-							Helper.color(primaryRed, primaryGreen, primaryBlue, 255),
-							new Item.Properties().group(ItemGroup.SEARCH)),
-					name + "_egg_spawn_egg"));
+		public EntityType<DinosaurEggEntity> getDinosaurEgg() {
+			if (dinosaurEgg == null) {
+				dinosaurEgg = Init.setup(EntityType.Builder
+						.<DinosaurEggEntity>create((t, w) -> new DinosaurEggEntity(t, w, getDinosaur(), spawnCount),
+								EntityClassification.CREATURE)
+						.size(1, 1).build(""), name + "_egg");
+			}
+			return dinosaurEgg;
+		}
 
-			ATTRIBUTES.add(Pair.of(dinosaur, attributes));
-			ATTRIBUTES.add(Pair.of(dinosaurEgg, () -> DinosaurEggEntity.attributes()));
+		public SpawnEggItem getDinosaurSpawnEgg() {
+			if (dinosaurSpawnEgg == null) {
+				dinosaurSpawnEgg = Init
+						.setup(new SpawnEggItem(getDinosaur(), Helper.color(primaryRed, primaryGreen, primaryBlue, 255),
+								Helper.color(secondaryRed, secondaryGreen, secondaryBlue, 255),
+								new Item.Properties().group(ItemGroup.SEARCH)), name + "_spawn_egg");
+			}
+			return dinosaurSpawnEgg;
+		}
+
+		public SpawnEggItem getDinosaurEggSpawnEgg() {
+			if (dinosaurEggSpawnEgg == null) {
+				dinosaurEggSpawnEgg = Init.setup(new SpawnEggItem(getDinosaurEgg(),
+						Helper.color(secondaryRed, secondaryGreen, secondaryBlue, 255),
+						Helper.color(primaryRed, primaryGreen, primaryBlue, 255),
+						new Item.Properties().group(ItemGroup.SEARCH)), name + "_egg_spawn_egg");
+			}
+			return dinosaurEggSpawnEgg;
+		}
+
+		public String getEnglish() {
+			return english;
+		}
+
+		public String getEggEnglish() {
+			return english + " Egg";
+		}
+
+		public String getSpawnEggEnglish() {
+			return english + " Spawn Egg";
+		}
+
+		public String getEggSpawnEggEnglish() {
+			return english + " Egg Spawn Egg";
 		}
 	}
 

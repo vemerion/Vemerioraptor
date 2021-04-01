@@ -30,5 +30,7 @@ public class ClientModEventSubscriber {
 				manager -> new DinosaurEggRenderer(manager, new VemerioraptorEggModel()));
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.BRONTOSAURUS_EGG,
 				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.PLESIOSAURUS_EGG, // TODO: Update model
+				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
 	}
 }

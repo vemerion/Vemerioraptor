@@ -62,7 +62,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return ModEntities.BRONTOSAURUS_EGG.create(world);
+		return ModEntities.PLESIOSAURUS_EGG.create(world);
 	}
 
 	@Override

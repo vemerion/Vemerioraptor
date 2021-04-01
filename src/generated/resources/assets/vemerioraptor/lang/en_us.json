@@ -1,0 +1,20 @@
+{
+  "entity.vemerioraptor.brontosaurus": "Brontosaurus",
+  "entity.vemerioraptor.brontosaurus_egg": "Brontosaurus Egg",
+  "entity.vemerioraptor.plesiosaurus": "Plesiosaurus",
+  "entity.vemerioraptor.plesiosaurus_egg": "Plesiosaurus Egg",
+  "entity.vemerioraptor.vemerioraptor": "Vemerioraptor",
+  "entity.vemerioraptor.vemerioraptor_egg": "Vemerioraptor Egg",
+  "item.vemerioraptor.brontosaurus_egg_spawn_egg": "Brontosaurus Egg Spawn Egg",
+  "item.vemerioraptor.brontosaurus_meat": "Brontosaurus Meat",
+  "item.vemerioraptor.brontosaurus_spawn_egg": "Brontosaurus Spawn Egg",
+  "item.vemerioraptor.cooked_brontosaurus_meat": "Cooked Brontosaurus Meat",
+  "item.vemerioraptor.manure": "Manure",
+  "item.vemerioraptor.plesiosaurus_egg_spawn_egg": "Plesiosaurus Egg Spawn Egg",
+  "item.vemerioraptor.plesiosaurus_spawn_egg": "Plesiosaurus Spawn Egg",
+  "item.vemerioraptor.vemerioraptor_claw": "Vemerioraptor Claw",
+  "item.vemerioraptor.vemerioraptor_claw_weapon": "Vemerioraptor Claw Weapon",
+  "item.vemerioraptor.vemerioraptor_egg_spawn_egg": "Vemerioraptor Egg Spawn Egg",
+  "item.vemerioraptor.vemerioraptor_spawn_egg": "Vemerioraptor Spawn Egg",
+  "itemGroup.vemerioraptor": "Vemerioraptor"
+}

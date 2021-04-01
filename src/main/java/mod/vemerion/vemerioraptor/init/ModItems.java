@@ -20,6 +20,9 @@ public class ModItems {
 
 	public static final Item VEMERIORAPTOR_CLAW = null;
 	public static final Item MANURE = null;
+	public static final Item VEMERIORAPTOR_CLAW_WEAPON = null;
+	public static final Item BRONTOSAURUS_MEAT = null;
+	public static final Item COOKED_BRONTOSAURUS_MEAT = null;
 
 	@SubscribeEvent
 	public static void onRegisterItem(RegistryEvent.Register<Item> event) {

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "vemerioraptor:item/cooked_brontosaurus_meat"
+  }
+}
