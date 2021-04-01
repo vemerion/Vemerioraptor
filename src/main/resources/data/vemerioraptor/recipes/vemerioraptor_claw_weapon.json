@@ -10,10 +10,10 @@
       "item": "minecraft:stick"
     },
     "X": {
-      "item": "vemerioraptor:vemerioraptor_claw_item"
+      "item": "vemerioraptor:vemerioraptor_claw"
     }
   },
   "result": {
-    "item": "vemerioraptor:vemerioraptor_claw_weapon_item"
+    "item": "vemerioraptor:vemerioraptor_claw_weapon"
   }
 }          

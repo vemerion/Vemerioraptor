@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableSet;
 
+import mod.vemerion.vemerioraptor.init.ModEntities;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.MobSpawnInfo;
@@ -24,10 +25,10 @@ public class ForgeEventSubscriber {
 	@SubscribeEvent
 	public static void onBiomeLoad(BiomeLoadingEvent event) {
 			if (RAPTOR_BIOMES.contains(event.getCategory())) {
-				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(Main.VEMERIORAPTOR_ENTITY, 4, 1, 1));
+				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.VEMERIORAPTOR, 4, 1, 1));
 			}
 			if (BRONTOSAURUS_BIOMES.contains(event.getCategory())) {
-				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(Main.BRONTOSAURUS_ENTITY, 5, 1, 2));
+				event.getSpawns().withSpawner(EntityClassification.CREATURE, new MobSpawnInfo.Spawners(ModEntities.BRONTOSAURUS, 5, 1, 2));
 			}
 	}
 }

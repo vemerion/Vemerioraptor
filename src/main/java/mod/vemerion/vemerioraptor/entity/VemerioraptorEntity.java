@@ -8,7 +8,8 @@ import java.util.function.Consumer;
 
 import com.google.common.collect.ImmutableSet;
 
-import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.init.ModEntities;
+import mod.vemerion.vemerioraptor.init.ModSounds;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.BoostHelper;
 import net.minecraft.entity.Entity;
@@ -74,7 +75,7 @@ public class VemerioraptorEntity extends DinosaurEntity implements IRideable {
 	}
 
 	public VemerioraptorEntity(World worldIn) {
-		this(Main.VEMERIORAPTOR_ENTITY, worldIn);
+		this(ModEntities.VEMERIORAPTOR, worldIn);
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
@@ -134,7 +135,7 @@ public class VemerioraptorEntity extends DinosaurEntity implements IRideable {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return Main.VEMERIORAPTOR_EGG_ENTITY.create(world);
+		return ModEntities.VEMERIORAPTOR_EGG.create(world);
 	}
 
 	@Override
@@ -164,17 +165,17 @@ public class VemerioraptorEntity extends DinosaurEntity implements IRideable {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return Main.RAPTOR_AMBIENT_SOUND;
+		return ModSounds.RAPTOR_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return Main.RAPTOR_HURT_SOUND;
+		return ModSounds.RAPTOR_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return Main.RAPTOR_DEATH_SOUND;
+		return ModSounds.RAPTOR_DEATH;
 	}
 
 	@Override

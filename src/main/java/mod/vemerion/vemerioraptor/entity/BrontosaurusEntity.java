@@ -6,7 +6,9 @@ import java.util.UUID;
 
 import com.google.common.collect.ImmutableList;
 
-import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.init.ModEntities;
+import mod.vemerion.vemerioraptor.init.ModItems;
+import mod.vemerion.vemerioraptor.init.ModSounds;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.EntityType;
@@ -55,7 +57,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 			DataSerializers.BOOLEAN);
 
 	private static final List<Item> FART_ITEMS = ImmutableList.of(Items.ACACIA_SAPLING, Items.BIRCH_SAPLING,
-			Items.DARK_OAK_SAPLING, Items.JUNGLE_SAPLING, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, Main.MANURE_ITEM);
+			Items.DARK_OAK_SAPLING, Items.JUNGLE_SAPLING, Items.OAK_SAPLING, Items.SPRUCE_SAPLING, ModItems.MANURE);
 
 	private static final int EATING_TIME = 60;
 
@@ -71,7 +73,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	}
 
 	public BrontosaurusEntity(World worldIn) {
-		this(Main.BRONTOSAURUS_ENTITY, worldIn);
+		this(ModEntities.BRONTOSAURUS, worldIn);
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
@@ -88,17 +90,17 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 	
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return Main.BRONTOSAURUS_AMBIENT_SOUND;
+		return ModSounds.BRONTOSAURUS_AMBIENT;
 	}
 
 	@Override
 	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-		return Main.BRONTOSAURUS_HURT_SOUND;
+		return ModSounds.BRONTOSAURUS_HURT;
 	}
 
 	@Override
 	protected SoundEvent getDeathSound() {
-		return Main.BRONTOSAURUS_DEATH_SOUND;
+		return ModSounds.BRONTOSAURUS_DEATH;
 	}
 
 	public boolean isEating() {
@@ -163,7 +165,7 @@ public class BrontosaurusEntity extends DinosaurEntity implements IAngerable {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return Main.BRONTOSAURUS_EGG_ENTITY.create(world);
+		return ModEntities.BRONTOSAURUS_EGG.create(world);
 	}
 
 	@Override

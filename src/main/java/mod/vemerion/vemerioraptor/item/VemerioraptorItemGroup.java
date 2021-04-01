@@ -1,6 +1,7 @@
 package mod.vemerion.vemerioraptor.item;
 
 import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.init.ModItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -15,7 +16,7 @@ public class VemerioraptorItemGroup extends ItemGroup {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(Main.VEMERIORAPTOR_CLAW_ITEM);
+		return new ItemStack(ModItems.VEMERIORAPTOR_CLAW);
 	}
 
 	@Override

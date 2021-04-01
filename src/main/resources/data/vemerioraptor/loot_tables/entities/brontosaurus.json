@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vemerioraptor:brontosaurus_meat_item"
+          "name": "vemerioraptor:brontosaurus_meat"
         }
       ]
     }

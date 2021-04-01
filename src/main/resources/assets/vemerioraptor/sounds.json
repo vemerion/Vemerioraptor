@@ -1,48 +1,48 @@
 {
-  "raptor_ambient_sound": {
+  "raptor_ambient": {
     "sounds": [
       {
-        "name": "vemerioraptor:raptor_ambient_sound",
+        "name": "vemerioraptor:raptor_ambient",
         "stream": false
       }
     ]
   },
-  "raptor_death_sound": {
+  "raptor_death": {
     "sounds": [
       {
-        "name": "vemerioraptor:raptor_death_sound",
+        "name": "vemerioraptor:raptor_death",
         "stream": false
       }
     ]
   },
-  "raptor_hurt_sound": {
+  "raptor_hurt": {
     "sounds": [
       {
-        "name": "vemerioraptor:raptor_hurt_sound",
+        "name": "vemerioraptor:raptor_hurt",
         "stream": false
       }
     ]
   },
-  "brontosaurus_ambient_sound": {
+  "brontosaurus_ambient": {
     "sounds": [
       {
-        "name": "vemerioraptor:brontosaurus_ambient_sound",
+        "name": "vemerioraptor:brontosaurus_ambient",
         "stream": false
       }
     ]
   },
-  "brontosaurus_death_sound": {
+  "brontosaurus_death": {
     "sounds": [
       {
-        "name": "vemerioraptor:brontosaurus_death_sound",
+        "name": "vemerioraptor:brontosaurus_death",
         "stream": false
       }
     ]
   },
-  "brontosaurus_hurt_sound": {
+  "brontosaurus_hurt": {
     "sounds": [
       {
-        "name": "vemerioraptor:brontosaurus_hurt_sound",
+        "name": "vemerioraptor:brontosaurus_hurt",
         "stream": false
       }
     ]

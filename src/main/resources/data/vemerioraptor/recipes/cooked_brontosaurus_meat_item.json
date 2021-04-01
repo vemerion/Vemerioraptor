@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "vemerioraptor:brontosaurus_meat_item"
-  },
-  "result": "vemerioraptor:cooked_brontosaurus_meat_item",
-  "experience": 0.35,
-  "cookingtime": 200
-}     

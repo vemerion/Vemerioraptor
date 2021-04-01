@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "vemerioraptor:vemerioraptor_claw_item"
+          "name": "vemerioraptor:vemerioraptor_claw"
         }
       ],
       "conditions": [

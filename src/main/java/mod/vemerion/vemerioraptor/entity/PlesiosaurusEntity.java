@@ -2,7 +2,7 @@ package mod.vemerion.vemerioraptor.entity;
 
 import java.util.EnumSet;
 
-import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.init.ModEntities;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.EntityType;
@@ -44,7 +44,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	}
 
 	public PlesiosaurusEntity(World worldIn) {
-		this(Main.PLESIOSAURUS_ENTITY, worldIn);
+		this(ModEntities.PLESIOSAURUS, worldIn);
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
@@ -62,7 +62,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return Main.BRONTOSAURUS_EGG_ENTITY.create(world);
+		return ModEntities.BRONTOSAURUS_EGG.create(world);
 	}
 
 	@Override
@@ -111,14 +111,14 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	}
 
 	protected void updateAir(int air) {
-		if (this.isAlive() && !this.isInWaterOrBubbleColumn()) {
-			this.setAir(air - 1);
-			if (this.getAir() == -20) {
-				this.setAir(0);
-				this.attackEntityFrom(DamageSource.DROWN, 2.0F);
+		if (isAlive() && !isInWaterOrBubbleColumn()) {
+			setAir(air - 1);
+			if (getAir() == -20) {
+				setAir(0);
+				attackEntityFrom(DamageSource.DROWN, 2.0F);
 			}
 		} else {
-			this.setAir(300);
+			setAir(getMaxAir());
 		}
 	}
 

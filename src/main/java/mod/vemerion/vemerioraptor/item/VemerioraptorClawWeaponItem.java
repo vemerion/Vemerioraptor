@@ -1,6 +1,6 @@
 package mod.vemerion.vemerioraptor.item;
 
-import mod.vemerion.vemerioraptor.Main;
+import mod.vemerion.vemerioraptor.init.ModItems;
 import net.minecraft.item.IItemTier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -42,7 +42,7 @@ public class VemerioraptorClawWeaponItem extends SwordItem {
 
 		@Override
 		public Ingredient getRepairMaterial() {
-			return Ingredient.fromItems(Main.VEMERIORAPTOR_CLAW_ITEM);
+			return Ingredient.fromItems(ModItems.VEMERIORAPTOR_CLAW);
 		}
 		
 	}

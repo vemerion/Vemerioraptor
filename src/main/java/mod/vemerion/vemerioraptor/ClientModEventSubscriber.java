@@ -1,5 +1,6 @@
 package mod.vemerion.vemerioraptor;
 
+import mod.vemerion.vemerioraptor.init.ModEntities;
 import mod.vemerion.vemerioraptor.model.BrontosaurusEggModel;
 import mod.vemerion.vemerioraptor.model.BrontosaurusModel;
 import mod.vemerion.vemerioraptor.model.PlesiosaurusModel;
@@ -18,16 +19,16 @@ public class ClientModEventSubscriber {
 
 	@SubscribeEvent
 	public static void clientSetup(FMLClientSetupEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(Main.VEMERIORAPTOR_ENTITY,
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.VEMERIORAPTOR,
 				(manager) -> new DinosaurRenderer<>(manager, new VemerioraptorModel(), 0.4f));
-		RenderingRegistry.registerEntityRenderingHandler(Main.BRONTOSAURUS_ENTITY,
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.BRONTOSAURUS,
 				(manager) -> new DinosaurRenderer<>(manager, new BrontosaurusModel(), 1f));
-		RenderingRegistry.registerEntityRenderingHandler(Main.PLESIOSAURUS_ENTITY,
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.PLESIOSAURUS,
 				(manager) -> new DinosaurRenderer<>(manager, new PlesiosaurusModel(), 1f));
 		
-		RenderingRegistry.registerEntityRenderingHandler(Main.VEMERIORAPTOR_EGG_ENTITY,
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.VEMERIORAPTOR_EGG,
 				manager -> new DinosaurEggRenderer(manager, new VemerioraptorEggModel()));
-		RenderingRegistry.registerEntityRenderingHandler(Main.BRONTOSAURUS_EGG_ENTITY,
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.BRONTOSAURUS_EGG,
 				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
 	}
 }
