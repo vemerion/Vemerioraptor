@@ -10,4 +10,8 @@ public class Helper {
 
 		return a | r | g | b;
 	}
+	
+	public static float toRad(double deg) {
+		return (float) Math.toRadians(deg);
+	}
 }
