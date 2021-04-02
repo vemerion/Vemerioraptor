@@ -37,6 +37,11 @@ public class DinosaurEggEntity extends AgeableEntity {
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
 		return null;
 	}
+	
+	@Override
+	public boolean canBreatheUnderwater() {
+		return true;
+	}
 
 	@Override
 	protected void onGrowingAdult() {

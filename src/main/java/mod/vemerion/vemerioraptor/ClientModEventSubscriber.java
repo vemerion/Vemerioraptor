@@ -3,6 +3,7 @@ package mod.vemerion.vemerioraptor;
 import mod.vemerion.vemerioraptor.init.ModEntities;
 import mod.vemerion.vemerioraptor.model.BrontosaurusEggModel;
 import mod.vemerion.vemerioraptor.model.BrontosaurusModel;
+import mod.vemerion.vemerioraptor.model.PlesiosaurusEggModel;
 import mod.vemerion.vemerioraptor.model.PlesiosaurusModel;
 import mod.vemerion.vemerioraptor.model.VemerioraptorEggModel;
 import mod.vemerion.vemerioraptor.model.VemerioraptorModel;
@@ -25,12 +26,12 @@ public class ClientModEventSubscriber {
 				(manager) -> new DinosaurRenderer<>(manager, new BrontosaurusModel(), 1f));
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.PLESIOSAURUS,
 				(manager) -> new DinosaurRenderer<>(manager, new PlesiosaurusModel(), 1f));
-		
+
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.VEMERIORAPTOR_EGG,
 				manager -> new DinosaurEggRenderer(manager, new VemerioraptorEggModel()));
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.BRONTOSAURUS_EGG,
 				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
-		RenderingRegistry.registerEntityRenderingHandler(ModEntities.PLESIOSAURUS_EGG, // TODO: Update model
-				manager -> new DinosaurEggRenderer(manager, new BrontosaurusEggModel()));
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.PLESIOSAURUS_EGG,
+				manager -> new DinosaurEggRenderer(manager, new PlesiosaurusEggModel()));
 	}
 }
