@@ -26,6 +26,7 @@ public class ModLanguageProvider extends LanguageProvider {
 		add(ModItems.MANURE, "Manure");
 		add(ModItems.VEMERIORAPTOR_CLAW, "Vemerioraptor Claw");
 		add(ModItems.VEMERIORAPTOR_CLAW_WEAPON, "Vemerioraptor Claw Weapon");
+		add(ModItems.PLESIOSAURUS_PADDLE, "Plesiosaurus Paddle");
 		add("itemGroup.vemerioraptor", "Vemerioraptor");
 	}
 

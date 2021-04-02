@@ -23,6 +23,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 		simpleItem(ModItems.BRONTOSAURUS_MEAT);
 		simpleItem(ModItems.COOKED_BRONTOSAURUS_MEAT);
 		simpleItem(ModItems.VEMERIORAPTOR_CLAW_WEAPON);
+		simpleItem(ModItems.PLESIOSAURUS_PADDLE);
 	}
 
 	private void egg(Item item) {

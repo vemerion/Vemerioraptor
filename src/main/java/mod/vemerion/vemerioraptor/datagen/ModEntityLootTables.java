@@ -27,7 +27,12 @@ public class ModEntityLootTables extends EntityLootTables {
 								.acceptCondition(RandomChanceWithLooting.builder(0.25f, 0.05f))));
 		registerLootTable(ModEntities.BRONTOSAURUS, LootTable.builder().addLootPool(LootPool.builder()
 				.rolls(ConstantRange.of(1)).addEntry(ItemLootEntry.builder(ModItems.BRONTOSAURUS_MEAT))));
-		registerLootTable(ModEntities.PLESIOSAURUS, LootTable.builder());
+		registerLootTable(ModEntities.PLESIOSAURUS,
+				LootTable.builder()
+						.addLootPool(LootPool.builder().rolls(ConstantRange.of(1))
+								.addEntry(ItemLootEntry.builder(ModItems.PLESIOSAURUS_PADDLE))
+								.acceptCondition(KilledByPlayer.builder())
+								.acceptCondition(RandomChanceWithLooting.builder(0.25f, 0.05f))));
 
 		for (ModEntities.DinosaurBuilder<?> builder : ModEntities.getDinosaurBuilders()) {
 			registerLootTable(builder.getDinosaurEgg(), LootTable.builder());
