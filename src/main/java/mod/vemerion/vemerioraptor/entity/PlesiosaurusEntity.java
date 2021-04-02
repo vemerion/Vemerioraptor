@@ -1,27 +1,31 @@
 package mod.vemerion.vemerioraptor.entity;
 
 import java.util.EnumSet;
+import java.util.List;
 import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.init.ModEntities;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
-import net.minecraft.entity.CreatureEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.Goal;
+import net.minecraft.entity.ai.goal.HurtByTargetGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
+import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -96,13 +100,16 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new MoveToWaterGoal(this));
-		goalSelector.addGoal(1, new MoveToEggGoal(this));
-		goalSelector.addGoal(2, new BreedGoal(this, 1));
-		goalSelector.addGoal(3, new HuntFishGoal(this, 1.6, true));
-		goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
-		goalSelector.addGoal(4, new LookRandomlyGoal(this));
-		targetSelector.addGoal(4,
-				new NearestAttackableTargetGoal<>(this, AbstractGroupFishEntity.class, 10, true, false, null));
+		goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.6, true));
+		goalSelector.addGoal(2, new MoveToEggGoal(this));
+		goalSelector.addGoal(3, new BreedGoal(this, 1));
+		goalSelector.addGoal(4, new AvoidEntityGoal<PlayerEntity>(this, PlayerEntity.class, 10, 1, 1.2));
+		goalSelector.addGoal(5, new RandomSwimmingGoal(this, 1.0D, 10));
+		goalSelector.addGoal(6, new LookRandomlyGoal(this));
+		targetSelector.addGoal(0, new HurtByTargetGoal(this));
+		targetSelector.addGoal(1, new DefendEggGoal(this));
+		targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, AbstractGroupFishEntity.class, 10, true,
+				false, e -> getEgg() == null));
 	}
 
 	@Override
@@ -263,24 +270,6 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 		}
 	}
 
-	private static class HuntFishGoal extends MeleeAttackGoal {
-
-		public HuntFishGoal(CreatureEntity creature, double speedIn, boolean useLongMemory) {
-			super(creature, speedIn, useLongMemory);
-		}
-
-		@Override
-		public boolean shouldContinueExecuting() {
-			return super.shouldContinueExecuting() && attacker.getAttackTarget() instanceof AbstractGroupFishEntity;
-		}
-
-		@Override
-		public boolean shouldExecute() {
-			return super.shouldExecute() && attacker.getAttackTarget() instanceof AbstractGroupFishEntity;
-		}
-
-	}
-
 	private static class MoveToEggGoal extends Goal {
 
 		private PlesiosaurusEntity plesiosaurus;
@@ -318,5 +307,46 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 			}
 		}
 
+	}
+
+	private static class DefendEggGoal extends TargetGoal {
+
+		private PlesiosaurusEntity plesiosaurus;
+		private LivingEntity target;
+
+		public DefendEggGoal(PlesiosaurusEntity plesiosaurus) {
+			super(plesiosaurus, false);
+			this.plesiosaurus = plesiosaurus;
+			this.setMutexFlags(EnumSet.of(Goal.Flag.TARGET));
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			Entity egg = plesiosaurus.getEgg();
+			if (egg != null) {
+				List<LivingEntity> targets = plesiosaurus.world.getEntitiesWithinAABB(LivingEntity.class,
+						egg.getBoundingBox().grow(4), e -> shouldAttack(egg, e));
+				if (!targets.isEmpty())
+					target = targets.get(plesiosaurus.getRNG().nextInt(targets.size()));
+
+			}
+
+			if (target == null) {
+				return false;
+			} else {
+				return !(target instanceof PlayerEntity)
+						|| !target.isSpectator() && !((PlayerEntity) target).isCreative();
+			}
+		}
+
+		private boolean shouldAttack(Entity egg, LivingEntity target) {
+			return egg != target && !(target instanceof PlesiosaurusEntity) && !(target instanceof DinosaurEggEntity);
+		}
+
+		@Override
+		public void startExecuting() {
+			plesiosaurus.setAttackTarget(target);
+			super.startExecuting();
+		}
 	}
 }
