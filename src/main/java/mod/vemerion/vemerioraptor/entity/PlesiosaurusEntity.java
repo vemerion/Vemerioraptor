@@ -1,10 +1,13 @@
 package mod.vemerion.vemerioraptor.entity;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.init.ModEntities;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
+import net.minecraft.entity.CreatureEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ILivingEntityData;
 import net.minecraft.entity.MobEntity;
@@ -13,6 +16,7 @@ import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.controller.MovementController;
+import net.minecraft.entity.ai.goal.BreedGoal;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
@@ -36,6 +40,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 
 public class PlesiosaurusEntity extends DinosaurEntity {
+
+	private UUID egg;
 
 	public PlesiosaurusEntity(EntityType<? extends PlesiosaurusEntity> type, World worldIn) {
 		super(type, worldIn);
@@ -62,23 +68,37 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	public AgeableEntity func_241840_a(ServerWorld world, AgeableEntity parent) {
-		return ModEntities.PLESIOSAURUS_EGG.create(world);
+		DinosaurEggEntity entity = ModEntities.PLESIOSAURUS_EGG.create(world);
+		egg = entity.getUniqueID();
+		return entity;
+	}
+
+	public Entity getEgg() {
+		if (egg != null && !world.isRemote)
+			return ((ServerWorld) world).getEntityByUuid(egg);
+		return null;
 	}
 
 	@Override
 	public void writeAdditional(CompoundNBT compound) {
 		super.writeAdditional(compound);
+		if (egg != null)
+			compound.putUniqueId("egg", egg);
 	}
 
 	@Override
 	public void readAdditional(CompoundNBT compound) {
 		super.readAdditional(compound);
+		if (compound.hasUniqueId("egg"))
+			egg = compound.getUniqueId("egg");
 	}
 
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new MoveToWaterGoal(this));
-		goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.6, true));
+		goalSelector.addGoal(1, new MoveToEggGoal(this));
+		goalSelector.addGoal(2, new BreedGoal(this, 1));
+		goalSelector.addGoal(3, new HuntFishGoal(this, 1.6, true));
 		goalSelector.addGoal(4, new RandomSwimmingGoal(this, 1.0D, 10));
 		goalSelector.addGoal(4, new LookRandomlyGoal(this));
 		targetSelector.addGoal(4,
@@ -216,7 +236,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 			return plesiosaurus.isOnGround()
 					&& !plesiosaurus.world.getFluidState(plesiosaurus.getPosition()).isTagged(FluidTags.WATER);
 		}
-		
+
 		@Override
 		public void resetTask() {
 			target = null;
@@ -232,14 +252,71 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 						break;
 					}
 				}
-				
+
 				if (target == null)
 					target = RandomPositionGenerator.findRandomTarget(plesiosaurus, 2, 0);
-				
+
 				if (target != null)
 					plesiosaurus.getMoveHelper().setMoveTo(target.getX(), target.getY(), target.getZ(), 1);
 			} else if (plesiosaurus.getDistanceSq(target) < 1)
 				target = null;
 		}
+	}
+
+	private static class HuntFishGoal extends MeleeAttackGoal {
+
+		public HuntFishGoal(CreatureEntity creature, double speedIn, boolean useLongMemory) {
+			super(creature, speedIn, useLongMemory);
+		}
+
+		@Override
+		public boolean shouldContinueExecuting() {
+			return super.shouldContinueExecuting() && attacker.getAttackTarget() instanceof AbstractGroupFishEntity;
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return super.shouldExecute() && attacker.getAttackTarget() instanceof AbstractGroupFishEntity;
+		}
+
+	}
+
+	private static class MoveToEggGoal extends Goal {
+
+		private PlesiosaurusEntity plesiosaurus;
+
+		public MoveToEggGoal(PlesiosaurusEntity plesiosaurus) {
+			this.plesiosaurus = plesiosaurus;
+			this.setMutexFlags(EnumSet.of(Flag.MOVE));
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			Entity egg = plesiosaurus.getEgg();
+			if (egg != null) {
+				double distance = plesiosaurus.getDistanceSq(egg);
+				return distance > 50 && distance < 2500;
+			}
+			return false;
+		}
+
+		@Override
+		public boolean shouldContinueExecuting() {
+			Entity egg = plesiosaurus.getEgg();
+			if (egg != null) {
+				double distance = plesiosaurus.getDistanceSq(egg);
+				return distance > 5 && distance < 2500;
+			}
+			return false;
+		}
+
+		@Override
+		public void startExecuting() {
+			Entity egg = plesiosaurus.getEgg();
+			if (egg != null) {
+				plesiosaurus.getNavigator().tryMoveToEntityLiving(egg, 1);
+			}
+		}
+
 	}
 }
