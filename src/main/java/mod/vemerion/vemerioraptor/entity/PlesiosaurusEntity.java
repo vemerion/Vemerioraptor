@@ -28,11 +28,13 @@ import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
 import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.pathfinding.PathNavigator;
 import net.minecraft.pathfinding.PathNodeType;
 import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -42,6 +44,7 @@ import net.minecraft.world.IServerWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.ForgeMod;
 
 public class PlesiosaurusEntity extends DinosaurEntity {
 
@@ -58,9 +61,15 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	}
 
 	public static AttributeModifierMap.MutableAttribute attributes() {
-		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 20)
+		return MobEntity.func_233666_p_().createMutableAttribute(Attributes.MAX_HEALTH, 23)
+				.createMutableAttribute(ForgeMod.SWIM_SPEED.get(), 1.6)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5)
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2);
+				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 3);
+	}
+
+	@Override
+	public boolean isBreedingItem(ItemStack stack) {
+		return ItemTags.FISHES.contains(stack.getItem());
 	}
 
 	@Override
@@ -284,7 +293,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 			Entity egg = plesiosaurus.getEgg();
 			if (egg != null) {
 				double distance = plesiosaurus.getDistanceSq(egg);
-				return distance > 50 && distance < 2500;
+				return plesiosaurus.getRNG().nextInt(100) == 0 && distance > 100 && distance < 2500;
 			}
 			return false;
 		}
@@ -294,7 +303,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 			Entity egg = plesiosaurus.getEgg();
 			if (egg != null) {
 				double distance = plesiosaurus.getDistanceSq(egg);
-				return distance > 5 && distance < 2500;
+				return distance > 12 && distance < 2500;
 			}
 			return false;
 		}
