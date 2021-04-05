@@ -26,6 +26,7 @@ import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.entity.ai.goal.NearestAttackableTargetGoal;
 import net.minecraft.entity.ai.goal.RandomSwimmingGoal;
 import net.minecraft.entity.ai.goal.TargetGoal;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.passive.fish.AbstractGroupFishEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -36,6 +37,7 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
@@ -47,7 +49,6 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ForgeMod;
 
 public class PlesiosaurusEntity extends DinosaurEntity {
-
 	private UUID egg;
 
 	public PlesiosaurusEntity(EntityType<? extends PlesiosaurusEntity> type, World worldIn) {
@@ -109,6 +110,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	@Override
 	protected void registerGoals() {
 		goalSelector.addGoal(0, new MoveToWaterGoal(this));
+		goalSelector.addGoal(0, new EatFishGoal(this));
 		goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.6, true));
 		goalSelector.addGoal(2, new MoveToEggGoal(this));
 		goalSelector.addGoal(3, new BreedGoal(this, 1));
@@ -156,6 +158,11 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 		} else {
 			setAir(getMaxAir());
 		}
+	}
+
+	@Override
+	public void tick() {
+		super.tick();
 	}
 
 	@Override
@@ -356,6 +363,61 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 		public void startExecuting() {
 			plesiosaurus.setAttackTarget(target);
 			super.startExecuting();
+		}
+	}
+
+	private static class EatFishGoal extends Goal {
+
+		private static final int EAT_TIME = 20 * 2;
+
+		private PlesiosaurusEntity plesiosaurus;
+		private ItemEntity fish;
+		private int eatTimer;
+
+		// No mutex flags: Eat while doing other tasks
+		private EatFishGoal(PlesiosaurusEntity plesiosaurus) {
+			this.plesiosaurus = plesiosaurus;
+		}
+
+		@Override
+		public boolean shouldExecute() {
+			return !nearbyFish().isEmpty();
+		}
+
+		@Override
+		public boolean shouldContinueExecuting() {
+			return fish != null;
+		}
+
+		private List<ItemEntity> nearbyFish() {
+			return plesiosaurus.world.getEntitiesWithinAABB(ItemEntity.class, plesiosaurus.getBoundingBox().grow(2),
+					e -> e.getItem().getItem().isIn(ItemTags.FISHES));
+		}
+
+		@Override
+		public void startExecuting() {
+			List<ItemEntity> fishes = nearbyFish();
+			if (!fishes.isEmpty()) {
+				fish = fishes.get(plesiosaurus.getRNG().nextInt(fishes.size()));
+				eatTimer = 0;
+			}
+		}
+
+		@Override
+		public void resetTask() {
+			eatTimer = 0;
+			fish = null;
+		}
+
+		@Override
+		public void tick() {
+			if (eatTimer++ > EAT_TIME) {
+				fish.remove();
+				fish = null;
+			}
+			
+			if (eatTimer % 4 == 0)
+				plesiosaurus.playSound(SoundEvents.ENTITY_GENERIC_EAT, 1, plesiosaurus.getSoundPitch());
 		}
 	}
 }
