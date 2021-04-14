@@ -87,8 +87,8 @@ public class ModEntities {
 
 		DINOSAUR_BUILDERS.add(new DinosaurBuilder<PlesiosaurusEntity>("plesiosaurus").factory(PlesiosaurusEntity::new)
 				.classification(EntityClassification.WATER_CREATURE).size(1.3f, 1f).spawnCount(2)
-				.primaryColor(80, 180, 235).attributes(() -> PlesiosaurusEntity.attributes()).english("Plesiosaurus")
-				.secondaryColor(42, 84, 107));
+				.primaryColor(44, 126, 129).attributes(() -> PlesiosaurusEntity.attributes()).english("Plesiosaurus")
+				.secondaryColor(172, 228, 228));
 	}
 
 	@SubscribeEvent
