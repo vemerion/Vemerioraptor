@@ -46,5 +46,29 @@
         "stream": false
       }
     ]
+  },
+  "plesiosaurus_ambient": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:plesiosaurus_ambient",
+        "stream": false
+      }
+    ]
+  },
+  "plesiosaurus_death": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:plesiosaurus_death",
+        "stream": false
+      }
+    ]
+  },
+  "plesiosaurus_hurt": {
+    "sounds": [
+      {
+        "name": "vemerioraptor:plesiosaurus_hurt",
+        "stream": false
+      }
+    ]
   }
 }

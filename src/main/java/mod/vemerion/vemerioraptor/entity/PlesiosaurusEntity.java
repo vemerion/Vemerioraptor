@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.init.ModEntities;
+import mod.vemerion.vemerioraptor.init.ModSounds;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
@@ -37,6 +38,7 @@ import net.minecraft.pathfinding.SwimmerPathNavigator;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -106,6 +108,22 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 		if (compound.hasUniqueId("egg"))
 			egg = compound.getUniqueId("egg");
 	}
+	
+	@Override
+	protected SoundEvent getAmbientSound() {
+		return ModSounds.PLESIOSAURUS_AMBIENT;
+	}
+
+	@Override
+	protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
+		return ModSounds.PLESIOSAURUS_HURT;
+	}
+
+	@Override
+	protected SoundEvent getDeathSound() {
+		return ModSounds.PLESIOSAURUS_DEATH;
+	}
+
 
 	@Override
 	protected void registerGoals() {
