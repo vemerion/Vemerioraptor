@@ -177,6 +177,7 @@ public class VemerioraptorModel extends DinosaurModel<VemerioraptorEntity> {
 	@Override
 	public void setRotationAngles(VemerioraptorEntity entityIn, float limbSwing, float limbSwingAmount,
 			float ageInTicks, float netHeadYaw, float headPitch) {
+		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		leftLeg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 2f * limbSwingAmount * 0.25f;
 		rightLeg1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f) * 2f * limbSwingAmount * 0.25f;
 		if (entityIn.isEating()) {
@@ -185,11 +186,6 @@ public class VemerioraptorModel extends DinosaurModel<VemerioraptorEntity> {
 		} else {
 			neck1.rotateAngleX = MathHelper.cos(limbSwing * 0.6662f + (float) Math.PI) * 2f * limbSwingAmount * 0.05f
 					- 0.503f;
-		}
-
-		for (ModelRenderer tail : getTailParts()) {
-			tail.rotateAngleX = MathHelper.cos(ageInTicks * 0.05f + limbSwing * 0.18f)
-					* (float) Math.toRadians(5 + limbSwingAmount * 5);
 		}
 	}
 
@@ -218,7 +214,7 @@ public class VemerioraptorModel extends DinosaurModel<VemerioraptorEntity> {
 		}
 	}
 
-	private Iterable<ModelRenderer> getTailParts() {
+	protected Iterable<ModelRenderer> getTailParts() {
 		return ImmutableList.of(tail1, tail2, tail3, tail4);
 	}
 

@@ -120,10 +120,9 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 	@Override
 	public void setRotationAngles(BrontosaurusEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
 			float netHeadYaw, float headPitch) {
+		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 		head.rotateAngleY = (float) Math.toRadians(netHeadYaw) * 0.25f;
 		head.rotateAngleZ = (float) Math.toRadians(netHeadYaw) * 0.25f;
-
-		rotateTail(limbSwing, limbSwingAmount, ageInTicks);
 	}
 
 	@Override
@@ -185,14 +184,9 @@ public class BrontosaurusModel extends DinosaurModel<BrontosaurusEntity> {
 		}
 	}
 
-	private void rotateTail(float limbSwing, float limbSwingAmount, float ageInTicks) {
-		for (ModelRenderer tail : getTailParts()) {
-			tail.rotateAngleX = MathHelper.cos(ageInTicks * 0.05f + limbSwing * 0.18f)
-					* (float) Math.toRadians(5 + limbSwingAmount * 5);
-		}
-	}
 
-	private Iterable<ModelRenderer> getTailParts() {
+
+	protected Iterable<ModelRenderer> getTailParts() {
 		return ImmutableList.of(tail1, tail2, tail3, tail4);
 	}
 

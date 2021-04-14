@@ -151,6 +151,7 @@ public class PlesiosaurusModel extends DinosaurModel<PlesiosaurusEntity> {
 	@Override
 	public void setRotationAngles(PlesiosaurusEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks,
 			float netHeadYaw, float headPitch) {
+		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 	}
 
 	/**
@@ -165,5 +166,10 @@ public class PlesiosaurusModel extends DinosaurModel<PlesiosaurusEntity> {
 	@Override
 	public ResourceLocation getTexture() {
 		return TEXTURES;
+	}
+
+	@Override
+	protected Iterable<ModelRenderer> getTailParts() {
+		return ImmutableList.of(tail1, tail2);
 	}
 }
