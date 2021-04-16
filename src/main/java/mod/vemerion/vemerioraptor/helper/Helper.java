@@ -1,6 +1,8 @@
 package mod.vemerion.vemerioraptor.helper;
 
 public class Helper {
+	
+	public static final float PI = (float) Math.PI;
 
 	public static int color(int r, int g, int b, int a) {
 		a = (a << 24) & 0xFF000000;
