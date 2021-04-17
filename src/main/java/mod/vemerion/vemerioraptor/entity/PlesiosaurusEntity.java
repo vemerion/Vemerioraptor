@@ -2,10 +2,12 @@ package mod.vemerion.vemerioraptor.entity;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 import mod.vemerion.vemerioraptor.init.ModEntities;
 import mod.vemerion.vemerioraptor.init.ModSounds;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.CreatureAttribute;
 import net.minecraft.entity.Entity;
@@ -45,6 +47,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.IServerWorld;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
@@ -68,6 +71,12 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 				.createMutableAttribute(ForgeMod.SWIM_SPEED.get(), 1.6)
 				.createMutableAttribute(Attributes.MOVEMENT_SPEED, 0.5)
 				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 3);
+	}
+
+	public static boolean canSpawn(EntityType<? extends PlesiosaurusEntity> type, IWorld worldIn, SpawnReason reason,
+			BlockPos p_223363_3_, Random randomIn) {
+		return worldIn.getBlockState(p_223363_3_).isIn(Blocks.WATER)
+				&& worldIn.getBlockState(p_223363_3_.up()).isIn(Blocks.WATER);
 	}
 
 	@Override
@@ -108,7 +117,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 		if (compound.hasUniqueId("egg"))
 			egg = compound.getUniqueId("egg");
 	}
-	
+
 	@Override
 	protected SoundEvent getAmbientSound() {
 		return ModSounds.PLESIOSAURUS_AMBIENT;
@@ -123,7 +132,6 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 	protected SoundEvent getDeathSound() {
 		return ModSounds.PLESIOSAURUS_DEATH;
 	}
-
 
 	@Override
 	protected void registerGoals() {
@@ -433,7 +441,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 				fish.remove();
 				fish = null;
 			}
-			
+
 			if (eatTimer % 4 == 0)
 				plesiosaurus.playSound(SoundEvents.ENTITY_GENERIC_EAT, 1, plesiosaurus.getSoundPitch());
 		}

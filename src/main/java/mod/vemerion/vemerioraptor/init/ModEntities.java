@@ -52,7 +52,7 @@ public class ModEntities {
 		}
 		return eggs.build();
 	}
-	
+
 	public static List<DinosaurBuilder<? extends DinosaurEntity>> getDinosaurBuilders() {
 		return ImmutableList.copyOf(DINOSAUR_BUILDERS);
 	}
@@ -107,7 +107,8 @@ public class ModEntities {
 	private static void setEntitySpawnPlacements() {
 		EntitySpawnPlacementRegistry.register(BRONTOSAURUS, EntitySpawnPlacementRegistry.PlacementType.ON_GROUND,
 				Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, AnimalEntity::canAnimalSpawn);
-
+		EntitySpawnPlacementRegistry.register(PLESIOSAURUS, EntitySpawnPlacementRegistry.PlacementType.IN_WATER,
+				Heightmap.Type.MOTION_BLOCKING_NO_LEAVES, PlesiosaurusEntity::canSpawn);
 	}
 
 	public static class DinosaurBuilder<T extends DinosaurEntity> {
