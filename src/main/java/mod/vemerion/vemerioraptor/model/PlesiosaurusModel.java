@@ -156,7 +156,7 @@ public class PlesiosaurusModel extends DinosaurModel<PlesiosaurusEntity> {
 		super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 
 		// Look
-		ImmutableList.of(neck1, neck2, neck3, head1).forEach(model -> {
+		ImmutableList.of(body1, neck1, neck2, neck3, head1).forEach(model -> {
 			model.rotateAngleY = model.startRotY + Helper.toRad(netHeadYaw) * 0.3f;
 			model.rotateAngleX = model.startRotX + Helper.toRad(headPitch) * 0.3f;
 		});
