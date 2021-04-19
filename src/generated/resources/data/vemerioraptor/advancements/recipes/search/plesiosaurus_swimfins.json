@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "vemerioraptor:plesiosaurus_swimfins"
+    ]
+  },
+  "criteria": {
+    "has_plesiosaurus_paddle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vemerioraptor:plesiosaurus_paddle"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "vemerioraptor:plesiosaurus_swimfins"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_plesiosaurus_paddle",
+      "has_the_recipe"
+    ]
+  ]
+}

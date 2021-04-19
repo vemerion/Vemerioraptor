@@ -33,6 +33,10 @@ public class ModRecipeProvider extends RecipeProvider {
 				.addCriterion("has_vemerioraptor_claw", hasItem(ModItems.VEMERIORAPTOR_CLAW))
 				.build(consumer, new ResourceLocation(Main.MODID, "vemerioraptor_claw_to_gunpowder"));
 
+		ShapelessRecipeBuilder.shapelessRecipe(ModItems.PLESIOSAURUS_SWIMFINS)
+				.addIngredient(ModItems.PLESIOSAURUS_PADDLE, 2)
+				.addCriterion("has_plesiosaurus_paddle", hasItem(ModItems.PLESIOSAURUS_PADDLE)).build(consumer);
+
 		ShapedRecipeBuilder.shapedRecipe(ModItems.VEMERIORAPTOR_CLAW_WEAPON).key('X', ModItems.VEMERIORAPTOR_CLAW)
 				.key('#', Tags.Items.RODS_WOODEN).patternLine("X").patternLine("#").patternLine("#")
 				.addCriterion("has_vemerioraptor_claw", hasItem(ModItems.VEMERIORAPTOR_CLAW)).build(consumer);

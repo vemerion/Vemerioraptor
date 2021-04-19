@@ -27,6 +27,7 @@ public class ModLanguageProvider extends LanguageProvider {
 		add(ModItems.VEMERIORAPTOR_CLAW, "Vemerioraptor Claw");
 		add(ModItems.VEMERIORAPTOR_CLAW_WEAPON, "Vemerioraptor Claw Weapon");
 		add(ModItems.PLESIOSAURUS_PADDLE, "Plesiosaurus Paddle");
+		add(ModItems.PLESIOSAURUS_SWIMFINS, "Plesiosaurus Swimfins");
 		add("itemGroup.vemerioraptor", "Vemerioraptor");
 	}
 

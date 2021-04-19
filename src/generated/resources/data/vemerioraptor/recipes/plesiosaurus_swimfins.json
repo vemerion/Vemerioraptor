@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "vemerioraptor:plesiosaurus_paddle"
+    },
+    {
+      "item": "vemerioraptor:plesiosaurus_paddle"
+    }
+  ],
+  "result": {
+    "item": "vemerioraptor:plesiosaurus_swimfins"
+  }
+}

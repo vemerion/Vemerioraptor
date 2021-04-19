@@ -2,6 +2,7 @@ package mod.vemerion.vemerioraptor.init;
 
 import mod.vemerion.vemerioraptor.Main;
 import mod.vemerion.vemerioraptor.item.PlesiosaurusPaddleItem;
+import mod.vemerion.vemerioraptor.item.PlesiosaurusSwimfinsItem;
 import mod.vemerion.vemerioraptor.item.VemerioraptorClawWeaponItem;
 import mod.vemerion.vemerioraptor.item.VemerioraptorItemGroup;
 import net.minecraft.item.BoneMealItem;
@@ -25,6 +26,7 @@ public class ModItems {
 	public static final Item BRONTOSAURUS_MEAT = null;
 	public static final Item COOKED_BRONTOSAURUS_MEAT = null;
 	public static final Item PLESIOSAURUS_PADDLE = null;
+	public static final Item PLESIOSAURUS_SWIMFINS = null;
 
 	@SubscribeEvent
 	public static void onRegisterItem(RegistryEvent.Register<Item> event) {
@@ -33,6 +35,7 @@ public class ModItems {
 		reg.register(Init.setup(new Item(new Item.Properties().group(ItemGroup.SEARCH)), "vemerioraptor_claw"));
 		reg.register(Init.setup(new VemerioraptorClawWeaponItem(), "vemerioraptor_claw_weapon"));
 		reg.register(Init.setup(new PlesiosaurusPaddleItem(), "plesiosaurus_paddle"));
+		reg.register(Init.setup(new PlesiosaurusSwimfinsItem(), "plesiosaurus_swimfins"));
 
 		Food brontosaurusMeat = new Food.Builder().hunger(10).saturation(1).meat().build();
 		Food cookedBrontosaurusMeat = new Food.Builder().hunger(20).saturation(1).meat().build();
