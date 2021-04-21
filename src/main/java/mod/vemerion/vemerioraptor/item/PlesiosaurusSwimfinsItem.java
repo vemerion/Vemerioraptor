@@ -105,7 +105,7 @@ public class PlesiosaurusSwimfinsItem extends ArmorItem {
 
 		@Override
 		public Ingredient getRepairMaterial() {
-			return Ingredient.fromItems(ModItems.PLESIOSAURUS_SWIMFINS);
+			return new DamageIngredient(ModItems.PLESIOSAURUS_PADDLE.getDefaultInstance());
 		}
 
 		@Override

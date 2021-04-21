@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 
 import mod.vemerion.vemerioraptor.Main;
 import mod.vemerion.vemerioraptor.init.ModItems;
+import mod.vemerion.vemerioraptor.item.DamageIngredient;
 import net.minecraft.data.CookingRecipeBuilder;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.IFinishedRecipe;
@@ -34,7 +35,7 @@ public class ModRecipeProvider extends RecipeProvider {
 				.build(consumer, new ResourceLocation(Main.MODID, "vemerioraptor_claw_to_gunpowder"));
 
 		ShapelessRecipeBuilder.shapelessRecipe(ModItems.PLESIOSAURUS_SWIMFINS)
-				.addIngredient(ModItems.PLESIOSAURUS_PADDLE, 2)
+				.addIngredient(new DamageIngredient(ModItems.PLESIOSAURUS_PADDLE.getDefaultInstance()), 2)
 				.addCriterion("has_plesiosaurus_paddle", hasItem(ModItems.PLESIOSAURUS_PADDLE)).build(consumer);
 
 		ShapedRecipeBuilder.shapedRecipe(ModItems.VEMERIORAPTOR_CLAW_WEAPON).key('X', ModItems.VEMERIORAPTOR_CLAW)
