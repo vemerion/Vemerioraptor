@@ -120,7 +120,7 @@ public class PlesiosaurusEntity extends DinosaurEntity {
 
 	@Override
 	protected SoundEvent getAmbientSound() {
-		return ModSounds.PLESIOSAURUS_AMBIENT;
+		return isInWaterOrBubbleColumn() ? ModSounds.PLESIOSAURUS_AMBIENT : ModSounds.PLESIOSAURUS_HURT;
 	}
 
 	@Override
